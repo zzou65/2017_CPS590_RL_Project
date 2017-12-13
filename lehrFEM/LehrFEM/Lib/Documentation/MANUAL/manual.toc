@@ -1,0 +1,207 @@
+\contentsline {chapter}{Introduction}{8}{chapter*.2}
+\contentsline {chapter}{Overview}{9}{chapter*.3}
+\contentsline {chapter}{\numberline {1}Mesh Generation and Refinement}{11}{chapter.1}
+\contentsline {section}{\numberline {1.1}Mesh Data Structure}{11}{section.1.1}
+\contentsline {section}{\numberline {1.2}Mesh Generation}{13}{section.1.2}
+\contentsline {section}{\numberline {1.3}Loading, Saving and Plotting Meshes}{14}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}Loading and Saving Meshes}{14}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.2}Plotting Routines}{15}{subsection.1.3.2}
+\contentsline {subsubsection}{Plot of Elements}{15}{section*.4}
+\contentsline {subsubsection}{Element Quality Plot}{16}{section*.5}
+\contentsline {subsubsection}{Plot of Uniform Similarity Region}{16}{section*.6}
+\contentsline {subsubsection}{Boundary Plot}{16}{section*.7}
+\contentsline {section}{\numberline {1.4}Mesh Refinements}{17}{section.1.4}
+\contentsline {subsection}{\numberline {1.4.1}Uniform Mesh Refinements}{17}{subsection.1.4.1}
+\contentsline {subsection}{\numberline {1.4.2}Adaptive Mesh Refinements}{19}{subsection.1.4.2}
+\contentsline {section}{\numberline {1.5}Postprocessing}{20}{section.1.5}
+\contentsline {subsection}{\numberline {1.5.1}Mesh Translation, Rotation and Stretching}{21}{subsection.1.5.1}
+\contentsline {subsection}{\numberline {1.5.2}Laplacian Smoothing and Jiggle}{21}{subsection.1.5.2}
+\contentsline {chapter}{\numberline {2}Local Shape Functions and its Gradients}{23}{chapter.2}
+\contentsline {section}{\numberline {2.1}Input and Output Arguments}{23}{section.2.1}
+\contentsline {section}{\numberline {2.2}Plotting Shape Functions}{24}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Pyramid Plots}{25}{subsection.2.2.1}
+\contentsline {section}{\numberline {2.3}Different Shape Functions}{26}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Lagrangian Finite Elements}{26}{subsection.2.3.1}
+\contentsline {subsubsection}{of order 1, $H^1$-conforming}{26}{section*.8}
+\contentsline {subsubsection}{of order 1, vector-valued}{26}{section*.9}
+\contentsline {subsubsection}{of order 2, conforming}{26}{section*.10}
+\contentsline {subsubsection}{Discontinuous Linear Lagrangian Finite Element in 1D ..}{27}{section*.11}
+\contentsline {subsubsection}{.. and 2D}{27}{section*.12}
+\contentsline {subsubsection}{Linear Finite Elements (1D)}{27}{section*.13}
+\contentsline {subsubsection}{Bilinear Finite Elements}{27}{section*.14}
+\contentsline {subsubsection}{Crouzeix-Raviart Finite Elements}{27}{section*.15}
+\contentsline {subsection}{\numberline {2.3.2}MINI Element}{27}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}Whitney 1-Forms}{28}{subsection.2.3.3}
+\contentsline {subsection}{\numberline {2.3.4}Legendre Polynomials up to degree {\tt p}}{28}{subsection.2.3.4}
+\contentsline {subsection}{\numberline {2.3.5}Hierarchical Shape Functions up to polynomial degree {\tt p}}{28}{subsection.2.3.5}
+\contentsline {chapter}{\numberline {3}Numerical Integration}{31}{chapter.3}
+\contentsline {section}{\numberline {3.1}Data Structure of Quadrature Rules}{31}{section.3.1}
+\contentsline {section}{\numberline {3.2}1D Quadrature Rules}{32}{section.3.2}
+\contentsline {section}{\numberline {3.3}2D Quadrature Rules}{32}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Transformed 1D Quadrature Rules}{32}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}2D Gaussian Quadrature Rules}{33}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}2D Newton-Cotes Quadrature Rules}{33}{subsection.3.3.3}
+\contentsline {chapter}{\numberline {4}Local Computations}{35}{chapter.4}
+\contentsline {section}{\numberline {4.1}Element Stiffness Matrices}{36}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Input Arguments}{36}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Output}{36}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Principles of Computation}{36}{subsection.4.1.3}
+\contentsline {subsection}{\numberline {4.1.4}Examples}{37}{subsection.4.1.4}
+\contentsline {subsubsection}{Laplacian}{37}{section*.16}
+\contentsline {subsubsection}{Heat Equation}{38}{section*.17}
+\contentsline {subsubsection}{Helmholtz Equation}{38}{section*.18}
+\contentsline {subsubsection}{DG finite elements}{39}{section*.19}
+\contentsline {subsubsection}{$hp$-finite elements}{39}{section*.20}
+\contentsline {section}{\numberline {4.2}Element Mass Matrices}{40}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Constant Finite Elements}{40}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Linear Finite Elements}{40}{subsection.4.2.2}
+\contentsline {subsubsection}{.. in 1D}{40}{section*.21}
+\contentsline {subsubsection}{.. in 2D}{41}{section*.22}
+\contentsline {subsection}{\numberline {4.2.3}Bilinear Finite Elements}{41}{subsection.4.2.3}
+\contentsline {subsection}{\numberline {4.2.4}Crouzeix-Raviart Finite Elements}{41}{subsection.4.2.4}
+\contentsline {subsection}{\numberline {4.2.5}Quadratic Finite Elements}{41}{subsection.4.2.5}
+\contentsline {subsection}{\numberline {4.2.6}Whitney 1-Forms}{41}{subsection.4.2.6}
+\contentsline {subsection}{\numberline {4.2.7}$hp$ Finite Elements}{42}{subsection.4.2.7}
+\contentsline {subsubsection}{.. in 1D}{42}{section*.23}
+\contentsline {subsubsection}{.. in 2D}{42}{section*.24}
+\contentsline {subsection}{\numberline {4.2.8}Mixed Finite Elements}{42}{subsection.4.2.8}
+\contentsline {section}{\numberline {4.3}Element Load Vectors}{42}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Boundary Contributions}{43}{subsection.4.3.1}
+\contentsline {subsubsection}{Input Arguments}{43}{section*.25}
+\contentsline {subsubsection}{Output}{44}{section*.26}
+\contentsline {subsubsection}{Examples}{44}{section*.27}
+\contentsline {subsection}{\numberline {4.3.2}Volume Contributions}{44}{subsection.4.3.2}
+\contentsline {subsubsection}{Input Arguments}{44}{section*.28}
+\contentsline {subsubsection}{Output}{45}{section*.29}
+\contentsline {subsubsection}{Examples}{45}{section*.30}
+\contentsline {chapter}{\numberline {5}Assembling}{47}{chapter.5}
+\contentsline {section}{\numberline {5.1}Assembling the Global Matrix}{47}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Constant Finite Elements}{49}{subsection.5.1.1}
+\contentsline {subsubsection}{.. in 1D}{49}{section*.31}
+\contentsline {subsubsection}{.. in 2D}{49}{section*.32}
+\contentsline {subsection}{\numberline {5.1.2}Linear Finite Elements}{50}{subsection.5.1.2}
+\contentsline {subsubsection}{.. in 1D}{50}{section*.33}
+\contentsline {subsubsection}{.. in 2D}{50}{section*.34}
+\contentsline {subsection}{\numberline {5.1.3}Bilinear Finite Elements}{50}{subsection.5.1.3}
+\contentsline {subsection}{\numberline {5.1.4}Crouzeix-Raviart Finite Elements}{50}{subsection.5.1.4}
+\contentsline {subsection}{\numberline {5.1.5}Quadratic Finite Elements}{50}{subsection.5.1.5}
+\contentsline {subsection}{\numberline {5.1.6}Whitney 1-Forms}{50}{subsection.5.1.6}
+\contentsline {subsection}{\numberline {5.1.7}$hp$ Finite Elements}{51}{subsection.5.1.7}
+\contentsline {subsection}{\numberline {5.1.8}DG finite elements}{52}{subsection.5.1.8}
+\contentsline {subsection}{\numberline {5.1.9}Mixed Finite Elements}{52}{subsection.5.1.9}
+\contentsline {subsubsection}{Linear and Constant Finite Elements in 1D}{52}{section*.35}
+\contentsline {subsubsection}{.. and in 2D}{52}{section*.36}
+\contentsline {section}{\numberline {5.2}Assembling the Load Vector}{52}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Constant Finite Elements}{54}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Linear Finite Elements}{54}{subsection.5.2.2}
+\contentsline {subsubsection}{.. in 1D}{54}{section*.37}
+\contentsline {subsubsection}{.. in 2D}{54}{section*.38}
+\contentsline {subsection}{\numberline {5.2.3}Bilinear Finite Elements}{54}{subsection.5.2.3}
+\contentsline {subsection}{\numberline {5.2.4}Crouzeix-Raviart Finite Elements}{55}{subsection.5.2.4}
+\contentsline {subsection}{\numberline {5.2.5}Quadratic Finite Elements}{55}{subsection.5.2.5}
+\contentsline {subsection}{\numberline {5.2.6}Whitney 1-Forms}{55}{subsection.5.2.6}
+\contentsline {subsection}{\numberline {5.2.7}DG finite elements}{55}{subsection.5.2.7}
+\contentsline {subsection}{\numberline {5.2.8}$hp$ Finite Elements}{55}{subsection.5.2.8}
+\contentsline {subsubsection}{.. in 1D}{55}{section*.39}
+\contentsline {subsubsection}{.. in 2D}{56}{section*.40}
+\contentsline {chapter}{\numberline {6}Boundary Conditions}{57}{chapter.6}
+\contentsline {section}{\numberline {6.1}Dirichlet Boundary Conditions}{57}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Linear Finite Elements}{59}{subsection.6.1.1}
+\contentsline {subsubsection}{.. in 1D}{59}{section*.41}
+\contentsline {subsubsection}{.. in 2D}{59}{section*.42}
+\contentsline {subsection}{\numberline {6.1.2}Bilinear Finite Elements}{60}{subsection.6.1.2}
+\contentsline {subsection}{\numberline {6.1.3}Crouzeix-Raviart Finite Elements}{60}{subsection.6.1.3}
+\contentsline {subsection}{\numberline {6.1.4}Quadratic Finite Elements}{60}{subsection.6.1.4}
+\contentsline {subsection}{\numberline {6.1.5}Whitney 1-Forms}{60}{subsection.6.1.5}
+\contentsline {subsection}{\numberline {6.1.6}$hp$ Finite Elements}{60}{subsection.6.1.6}
+\contentsline {subsubsection}{.. in 1D}{60}{section*.43}
+\contentsline {subsubsection}{.. in 2D}{60}{section*.44}
+\contentsline {section}{\numberline {6.2}Neumann Boundary Conditions}{61}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}Linear Finite Elements}{63}{subsection.6.2.1}
+\contentsline {subsubsection}{.. in 1D}{63}{section*.45}
+\contentsline {subsubsection}{.. in 2D}{64}{section*.46}
+\contentsline {subsection}{\numberline {6.2.2}Bilinear Finite Elements}{64}{subsection.6.2.2}
+\contentsline {subsection}{\numberline {6.2.3}Quadratic Finite Elements}{64}{subsection.6.2.3}
+\contentsline {subsection}{\numberline {6.2.4}$hp$ Finite Elements}{64}{subsection.6.2.4}
+\contentsline {chapter}{\numberline {7}Plotting the Solution}{65}{chapter.7}
+\contentsline {section}{\numberline {7.1}Ordinary Plot}{65}{section.7.1}
+\contentsline {subsection}{\numberline {7.1.1}Constant Finite Elements}{66}{subsection.7.1.1}
+\contentsline {subsection}{\numberline {7.1.2}Linear Finite Elements}{66}{subsection.7.1.2}
+\contentsline {subsubsection}{.. in 1D}{66}{section*.47}
+\contentsline {subsubsection}{.. in 2D}{66}{section*.48}
+\contentsline {subsection}{\numberline {7.1.3}Bilinear Finite Elements}{66}{subsection.7.1.3}
+\contentsline {subsection}{\numberline {7.1.4}Crouzeix-Raviart Finite Elements}{66}{subsection.7.1.4}
+\contentsline {subsection}{\numberline {7.1.5}Quadratic Finite Elements}{67}{subsection.7.1.5}
+\contentsline {subsection}{\numberline {7.1.6}Whitney 1-Forms}{67}{subsection.7.1.6}
+\contentsline {subsection}{\numberline {7.1.7}$hp$ Finite Elements}{67}{subsection.7.1.7}
+\contentsline {subsubsection}{.. in 1D}{67}{section*.49}
+\contentsline {subsubsection}{.. in 2D}{67}{section*.50}
+\contentsline {section}{\numberline {7.2}Plot Line}{68}{section.7.2}
+\contentsline {subsection}{\numberline {7.2.1}Linear Finite Elements}{69}{subsection.7.2.1}
+\contentsline {subsection}{\numberline {7.2.2}Quadratic Finite Elements}{69}{subsection.7.2.2}
+\contentsline {section}{\numberline {7.3}Plot Contours}{69}{section.7.3}
+\contentsline {subsection}{\numberline {7.3.1}Linear Finite Elements}{69}{subsection.7.3.1}
+\contentsline {subsection}{\numberline {7.3.2}Crouzeix-Raviart Finite Elements}{70}{subsection.7.3.2}
+\contentsline {chapter}{\numberline {8}Discretization Errors}{71}{chapter.8}
+\contentsline {section}{\numberline {8.1}$H^1$-Norm}{72}{section.8.1}
+\contentsline {subsection}{\numberline {8.1.1}Linear Finite Elements}{73}{subsection.8.1.1}
+\contentsline {subsubsection}{.. in 1D}{73}{section*.51}
+\contentsline {subsubsection}{.. in 2D}{73}{section*.52}
+\contentsline {subsection}{\numberline {8.1.2}Bilinear Finite Elements}{73}{subsection.8.1.2}
+\contentsline {subsection}{\numberline {8.1.3}Quadratic Finite Elements}{73}{subsection.8.1.3}
+\contentsline {subsection}{\numberline {8.1.4}$hp$ Finite Elements}{74}{subsection.8.1.4}
+\contentsline {section}{\numberline {8.2}$H^1$-Semi-Norm}{74}{section.8.2}
+\contentsline {subsection}{\numberline {8.2.1}Linear Finite Elements}{74}{subsection.8.2.1}
+\contentsline {subsubsection}{.. in 1D}{74}{section*.53}
+\contentsline {subsubsection}{.. in 2D}{75}{section*.54}
+\contentsline {subsection}{\numberline {8.2.2}Bilinear Finite Elements}{75}{subsection.8.2.2}
+\contentsline {subsection}{\numberline {8.2.3}Crouzeix-Raviart Finite Elements}{75}{subsection.8.2.3}
+\contentsline {subsection}{\numberline {8.2.4}Quadratic Finite Elements}{75}{subsection.8.2.4}
+\contentsline {subsection}{\numberline {8.2.5}$hp$ Finite Elements}{75}{subsection.8.2.5}
+\contentsline {section}{\numberline {8.3}$L^1$-Norm}{76}{section.8.3}
+\contentsline {subsection}{\numberline {8.3.1}Crouzeix-Raviart Finite Elements}{76}{subsection.8.3.1}
+\contentsline {subsection}{\numberline {8.3.2}$hp$ Finite Elements}{76}{subsection.8.3.2}
+\contentsline {subsection}{\numberline {8.3.3}Linear Finite Volumes}{76}{subsection.8.3.3}
+\contentsline {section}{\numberline {8.4}$L^2$-Norm}{77}{section.8.4}
+\contentsline {subsection}{\numberline {8.4.1}Constant Finite Elements}{77}{subsection.8.4.1}
+\contentsline {subsection}{\numberline {8.4.2}Linear Finite Elements}{77}{subsection.8.4.2}
+\contentsline {subsubsection}{.. in 1D}{77}{section*.55}
+\contentsline {subsubsection}{.. in 2D}{77}{section*.56}
+\contentsline {subsection}{\numberline {8.4.3}Bilinear Finite Elements}{77}{subsection.8.4.3}
+\contentsline {subsection}{\numberline {8.4.4}Crouzeix-Raviart Finite Elements}{77}{subsection.8.4.4}
+\contentsline {subsection}{\numberline {8.4.5}Quadratic Finite Elements}{78}{subsection.8.4.5}
+\contentsline {subsection}{\numberline {8.4.6}Whitney 1-Forms}{78}{subsection.8.4.6}
+\contentsline {subsection}{\numberline {8.4.7}$hp$ Finite Elements}{78}{subsection.8.4.7}
+\contentsline {subsubsection}{.. in 1D}{78}{section*.57}
+\contentsline {subsubsection}{.. in 2D}{78}{section*.58}
+\contentsline {subsection}{\numberline {8.4.8}Further Functions}{78}{subsection.8.4.8}
+\contentsline {section}{\numberline {8.5}$L^{\infty }$-Norm}{78}{section.8.5}
+\contentsline {subsection}{\numberline {8.5.1}Linear Finite Elements}{79}{subsection.8.5.1}
+\contentsline {subsubsection}{.. in 1D}{79}{section*.59}
+\contentsline {subsubsection}{.. in 2D}{79}{section*.60}
+\contentsline {subsection}{\numberline {8.5.2}Bilinear Finite Elements}{79}{subsection.8.5.2}
+\contentsline {subsection}{\numberline {8.5.3}Quadratic Finite Elements}{79}{subsection.8.5.3}
+\contentsline {subsection}{\numberline {8.5.4}$hp$ Finite Elements}{79}{subsection.8.5.4}
+\contentsline {subsection}{\numberline {8.5.5}Linear Finite Volumes}{80}{subsection.8.5.5}
+\contentsline {chapter}{\numberline {9}Examples}{81}{chapter.9}
+\contentsline {section}{\numberline {9.1}Linear and Quadratic finite elements}{81}{section.9.1}
+\contentsline {section}{\numberline {9.2}DG finite elements}{85}{section.9.2}
+\contentsline {section}{\numberline {9.3}Whitney-1-forms}{87}{section.9.3}
+\contentsline {section}{\numberline {9.4}$hp$-FEM}{88}{section.9.4}
+\contentsline {section}{\numberline {9.5}Convection Diffusion problems}{93}{section.9.5}
+\contentsline {subsection}{\numberline {9.5.1}SUPG-method}{93}{subsection.9.5.1}
+\contentsline {subsection}{\numberline {9.5.2}Upwinding methods}{94}{subsection.9.5.2}
+\contentsline {subsection}{\numberline {9.5.3}The driver routines}{96}{subsection.9.5.3}
+\contentsline {chapter}{\numberline {10}Finite Volume Method}{101}{chapter.10}
+\contentsline {section}{\numberline {10.1}Finite Volume Code for Solving Convection/Dif\discretionary {-}{}{}fusion Equations}{101}{section.10.1}
+\contentsline {subsection}{\numberline {10.1.1}Background}{101}{subsection.10.1.1}
+\contentsline {subsection}{\numberline {10.1.2}Mesh Generation and Plotting}{101}{subsection.10.1.2}
+\contentsline {subsection}{\numberline {10.1.3}Local computations}{102}{subsection.10.1.3}
+\contentsline {subsubsection}{Diffusion term}{102}{section*.61}
+\contentsline {subsection}{\numberline {10.1.4}Assembly}{105}{subsection.10.1.4}
+\contentsline {subsection}{\numberline {10.1.5}Error Analysis}{106}{subsection.10.1.5}
+\contentsline {subsection}{\numberline {10.1.6}File-by-File Description}{106}{subsection.10.1.6}
+\contentsline {subsection}{\numberline {10.1.7}Driver routines}{108}{subsection.10.1.7}
+\contentsline {subsubsection}{Example 1}{108}{section*.62}
+\contentsline {subsubsection}{Example 2}{111}{section*.63}
+\contentsline {subsubsection}{Example 3}{111}{section*.64}

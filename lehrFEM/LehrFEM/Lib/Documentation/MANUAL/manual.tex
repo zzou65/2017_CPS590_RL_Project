@@ -1,0 +1,197 @@
+\documentclass[a4paper,10pt]{book}
+
+% Caption of figures shall be centered and not as wide as the pagewidth
+\def\capwidth{0.85\textwidth}
+\def\capsize{\small}
+
+% Imported packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+\usepackage[dvips,dvipdf]{graphicx}
+\usepackage{epsfig}
+% \usepackage{bibcontents} % includes bibliography in the table of contents (bibcontents.sty needed)
+\usepackage{makeidx} % to make an index
+\usepackage{fancyhdr} % for a fancy header
+\usepackage{listings}
+\usepackage[usenames,dvipsnames]{color}
+% This is the color used for MATLAB comments below
+\definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enable this for viewing in xdvi 
+\usepackage[hypertex]{hyperref}
+\usepackage{showkeys}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enable this for PDF output
+%\usepackage[[dvips,bookmarks=true,linkcolor=green]{hyperref}
+
+% \hypersetup{colorlinks=false}
+% run: 1. tex->dvi, 2. dvi->ps, 3. ps->pdf 
+
+
+
+
+
+\makeindex
+
+% Color text
+\usepackage{color}
+\definecolor{pink}{rgb}{1,0,1}
+
+% short cuts to put words with typewriter style in index (without typing it 3 times)
+\newcommand{\ttindex}[1]{{\tt #1}\index{#1@{\tt #1}}}
+\newcommand{\ttitindex}[1]{{\tt #1}\index{#1@{\tt #1}|textit}}
+
+
+% Name definitions
+\newcommand{\LIBNAME}{LehrFEM }
+\newcommand{\MATLAB}{MATLAB }
+
+
+
+% Page headings
+% \pagestyle{myheadings}
+%\markright{\small\scshape \LIBNAME Manual}
+%\pagenumbering{arabic}
+% \pagestyle{fancyplain}
+
+% Page style
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]%
+   {\markboth{\textsc{\thechapter.\ #1}}{}}
+\renewcommand{\sectionmark}[1]%
+   {\markright{\thesection.\ #1}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+\newcommand{\helv}{%
+   \fontsize{9}{11}\selectfont}
+\fancyhf{}
+\fancyhead[LE,RO]{\helv \thepage}
+\fancyhead[LO]{\helv \rightmark}
+\fancyhead[RE]{\helv \leftmark}
+
+% Define titlepage
+\title{\LIBNAME - A 2D Finite Element Toolbox}
+\author{Annegret Burtscher, Eivind Fonn, Patrick Meury}
+\date{\today}
+
+
+
+% 'Introduction' and 'Mesh Generation' by Patrick Meury, Jun 2005 - original files in /Lib/Documentation
+% 'Finite volume code for solving convection/diffusion equations' by Eivind Fonn, Summer 2007
+% 'Overview', 'Basis functions', 'Numerical Integration', 'Local computations', 'Assembling', 'Boundary conditions', 'Plotting the solution' and 'Discretization errors' by Annegret Burtscher, Jul-Sep 2008
+
+
+\begin{document}
+\lstloadlanguages{Matlab}%
+\lstset{language=Matlab,                        % Use MATLAB
+        frame=single,                           % Single frame around code
+        basicstyle=\small\ttfamily,             % Use small true type font
+        keywordstyle=[1]\color{blue}\bf,        % MATLAB functions bold and blue
+        keywordstyle=[2]\color{purple},         % MATLAB function arguments purple
+        keywordstyle=[3]\color{blue}\underbar,  % User functions underlined and blue
+        identifierstyle=,                       % Nothing special about identifiers
+                                                % Comments small dark green courier
+        commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small,
+        stringstyle=\color{Purple},             % Strings are purple
+        showstringspaces=false,                 % Don't put marks in string spaces
+        tabsize=5,                              % 5 spaces per tab
+        %
+        %%% Put standard MATLAB functions not included in the default
+        %%% language here
+        morekeywords={xlim,ylim,var,alpha,factorial,poissrnd,normpdf,normcdf},
+        %
+        %%% Put MATLAB function parameters here
+        morekeywords=[2]{on, off, interp},
+        %
+        %%% Put user defined functions here
+        morekeywords=[3]{FindESS, homework_example},
+        %
+        morecomment=[l][\color{Blue}]{...},     % Line continuation (...) like blue comment
+        numbers=left,                           % Line numbers on left
+        firstnumber=1,                          % Line numbers start with line 1
+        numberstyle=\tiny\color{Blue},          % Line numbers are blue
+        stepnumber=5                            % Line numbers go in steps of 5
+        }
+
+
+% Make titlepage
+\maketitle
+
+% Make table of contents
+\tableofcontents
+ 
+
+% Include chapter 'Intro'
+\input intro
+\addcontentsline{toc}{chapter}{Introduction}
+
+% Incluce chapter 'Overview'
+\input overview
+\addcontentsline{toc}{chapter}{Overview}
+
+% Include chapter 'Mesh generation'
+\input mesh_gen
+
+% Include chapter 'Basis functions'
+\input shap_fct
+
+% Include chapter 'Numerical integration'
+\input quad_rule
+
+% Include chapter 'Local computations'
+\input stima
+\input mass
+\input load
+
+% Include chapter 'Assembling'
+\input assem_mat
+\input assem_load
+
+% Include chapter 'Boundary conditions'
+\input assem_dir
+\input assem_neu
+
+% Include chapter 'Computation of solution'
+
+
+% What about interpolation, e.g. the functions LFE_DOF_interp, QFE_DOF_interp etc.
+
+
+% Include chapter 'Plot'
+\input plot
+
+% Include chapter 'Discretization errors'
+\input err
+\input h1_err
+\input h1s_err
+\input l1_err
+\input l2_err
+\input linf_err
+
+
+
+% Include chapter 'Examples'
+\input ex
+
+% Include chapter 'Finite volume method'
+\input fvm_conv_diff
+
+
+
+% Make the bibliography
+\newpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{bibfile}
+\bibliographystyle{alpha}
+%\bibliographystyle{unsrt}
+
+% Make Index
+\newpage
+\addcontentsline{toc}{chapter}{Index}
+\printindex
+
+
+\end{document}

@@ -1,0 +1,1039 @@
+Warning: No window system found.  Java option 'MWT' ignored
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2010 The MathWorks, Inc.
+                Version 7.10.0.499 (R2010a) 64-bit (glnxa64)
+                              February 5, 2010
+
+ 
+  To get started, type one of these: helpwin, helpdesk, or demo.
+  For product information, visit www.mathworks.com.
+ 
+>> 
+   ###########################################
+   ###                                     ###
+   ### LehrFEM - 2D finite element toolbox ###
+   ###                                     ###
+   ###########################################
+
+     Add assembly routines                     [  OK  ]
+     Add element computation routines          [  OK  ]
+     Add mesh generation routines              [  OK  ]
+     Add plotting routines                     [  OK  ]
+     Add quadrature rules                      [  OK  ]
+     Add error estimators                      [  OK  ]
+     Add discretization errors                 [  OK  ]
+     Add functionals                           [  OK  ]
+     Add solver routines                       [  OK  ]
+     Add time stepping routines                [  OK  ]
+     Add tools                                 [  OK  ]
+     Add error distribution routines           [  OK  ]
+     Add interpolation routines                [  OK  ]
+     Add limiter routines                      [  OK  ]
+     Add m2htlm-Tool routines                  [  OK  ]
+
+
+nsteps_loc =
+
+     1
+
+
+ans =
+
+     1    14
+
+
+ans =
+
+     1     2
+
+
+ans =
+
+     1     4
+
+
+ans =
+
+     1     4
+
+
+ans =
+
+     2     4
+
+
+ans =
+
+     3     4
+
+
+ans =
+
+     1     7
+
+
+ans =
+
+     1     7
+
+
+ans =
+
+     2     7
+
+
+ans =
+
+     3     7
+
+
+ans =
+
+     4     7
+
+
+ans =
+
+     5     7
+
+
+ans =
+
+     6     7
+
+
+ans =
+
+     1    14
+
+
+ans =
+
+     2    14
+
+
+ans =
+
+     3    14
+
+
+ans =
+
+     4    14
+
+
+ans =
+
+     5    14
+
+
+ans =
+
+     6    14
+
+
+ans =
+
+     7    14
+
+
+ans =
+
+     8    14
+
+
+ans =
+
+     9    14
+
+
+ans =
+
+    10    14
+
+
+ans =
+
+    11    14
+
+
+ans =
+
+    12    14
+
+
+ans =
+
+    13    14
+
+
+ans =
+
+    14    14
+
+
+ans =
+
+     3    27
+
+
+ans =
+
+     4    27
+
+
+ans =
+
+     5    27
+
+
+ans =
+
+     6    27
+
+
+ans =
+
+     7    27
+
+
+ans =
+
+     8    27
+
+
+ans =
+
+     9    27
+
+
+ans =
+
+    10    27
+
+
+ans =
+
+    11    27
+
+
+ans =
+
+    12    27
+
+
+ans =
+
+    13    27
+
+
+ans =
+
+    14    27
+
+
+ans =
+
+    15    27
+
+
+ans =
+
+    16    27
+
+
+ans =
+
+    17    27
+
+
+ans =
+
+    18    27
+
+
+ans =
+
+    19    27
+
+
+ans =
+
+    20    27
+
+
+ans =
+
+    21    27
+
+
+ans =
+
+    22    27
+
+
+ans =
+
+    23    27
+
+
+ans =
+
+    24    27
+
+
+ans =
+
+    25    27
+
+
+ans =
+
+    26    27
+
+
+ans =
+
+    27    27
+
+
+ans =
+
+     5    53
+
+
+ans =
+
+     6    53
+
+
+ans =
+
+     7    53
+
+
+ans =
+
+     8    53
+
+
+ans =
+
+     9    53
+
+
+ans =
+
+    10    53
+
+
+ans =
+
+    11    53
+
+
+ans =
+
+    12    53
+
+
+ans =
+
+    13    53
+
+
+ans =
+
+    14    53
+
+
+ans =
+
+    15    53
+
+
+ans =
+
+    16    53
+
+
+ans =
+
+    17    53
+
+
+ans =
+
+    18    53
+
+
+ans =
+
+    19    53
+
+
+ans =
+
+    20    53
+
+
+ans =
+
+    21    53
+
+
+ans =
+
+    22    53
+
+
+ans =
+
+    23    53
+
+
+ans =
+
+    24    53
+
+
+ans =
+
+    25    53
+
+
+ans =
+
+    26    53
+
+
+ans =
+
+    27    53
+
+
+ans =
+
+    28    53
+
+
+ans =
+
+    29    53
+
+
+ans =
+
+    30    53
+
+
+ans =
+
+    31    53
+
+
+ans =
+
+    32    53
+
+
+ans =
+
+    33    53
+
+
+ans =
+
+    34    53
+
+
+ans =
+
+    35    53
+
+
+ans =
+
+    36    53
+
+
+ans =
+
+    37    53
+
+
+ans =
+
+    38    53
+
+
+ans =
+
+    39    53
+
+
+ans =
+
+    40    53
+
+
+ans =
+
+    41    53
+
+
+ans =
+
+    42    53
+
+
+ans =
+
+    43    53
+
+
+ans =
+
+    44    53
+
+
+ans =
+
+    45    53
+
+
+ans =
+
+    46    53
+
+
+ans =
+
+    47    53
+
+
+ans =
+
+    48    53
+
+
+ans =
+
+    49    53
+
+
+ans =
+
+    50    53
+
+
+ans =
+
+    51    53
+
+
+ans =
+
+    52    53
+
+
+ans =
+
+    53    53
+
+
+ans =
+
+     8   106
+
+
+ans =
+
+     9   106
+
+
+ans =
+
+    10   106
+
+
+ans =
+
+    11   106
+
+
+ans =
+
+    12   106
+
+
+ans =
+
+    13   106
+
+
+ans =
+
+    14   106
+
+
+ans =
+
+    15   106
+
+
+ans =
+
+    16   106
+
+
+ans =
+
+    17   106
+
+
+ans =
+
+    18   106
+
+
+ans =
+
+    19   106
+
+
+ans =
+
+    20   106
+
+
+ans =
+
+    21   106
+
+
+ans =
+
+    22   106
+
+
+ans =
+
+    23   106
+
+
+ans =
+
+    24   106
+
+
+ans =
+
+    25   106
+
+
+ans =
+
+    26   106
+
+
+ans =
+
+    27   106
+
+
+ans =
+
+    28   106
+
+
+ans =
+
+    29   106
+
+
+ans =
+
+    30   106
+
+
+ans =
+
+    31   106
+
+
+ans =
+
+    32   106
+
+
+ans =
+
+    33   106
+
+
+ans =
+
+    34   106
+
+
+ans =
+
+    35   106
+
+
+ans =
+
+    36   106
+
+
+ans =
+
+    37   106
+
+
+ans =
+
+    38   106
+
+
+ans =
+
+    39   106
+
+
+ans =
+
+    40   106
+
+
+ans =
+
+    41   106
+
+
+ans =
+
+    42   106
+
+
+ans =
+
+    43   106
+
+
+ans =
+
+    44   106
+
+
+ans =
+
+    45   106
+
+
+ans =
+
+    46   106
+
+
+ans =
+
+    47   106
+
+
+ans =
+
+    48   106
+
+
+ans =
+
+    49   106
+
+
+ans =
+
+    50   106
+
+
+ans =
+
+    51   106
+
+
+ans =
+
+    52   106
+
+
+ans =
+
+    53   106
+
+
+ans =
+
+    54   106
+
+
+ans =
+
+    55   106
+
+
+ans =
+
+    56   106
+
+
+ans =
+
+    57   106
+
+
+ans =
+
+    58   106
+
+
+ans =
+
+    59   106
+
+
+ans =
+
+    60   106
+
+
+ans =
+
+    61   106
+
+
+ans =
+
+    62   106
+
+
+ans =
+
+    63   106
+
+
+ans =
+
+    64   106
+
+
+ans =
+
+    65   106
+
+
+ans =
+
+    66   106
+
+
+ans =
+
+    67   106
+
+
+ans =
+
+    68   106
+
+
+ans =
+
+    69   106
+
+
+ans =
+
+    70   106
+
+
+ans =
+
+    71   106
+
+
+ans =
+
+    72   106
+
+
+ans =
+
+    73   106
+
+
+ans =
+
+    74   106
+
+
+ans =
+
+    75   106
+
+
+ans =
+
+    76   106
+
+
+ans =
+
+    77   106
+
+
+ans =
+
+    78   106
+
+
+ans =
+
+    79   106
+
+
+ans =
+
+    80   106
+
+
+ans =
+
+    81   106
+
+
+ans =
+
+    82   106
+
+
+ans =
+
+    83   106
+
+
+ans =
+
+    84   106
+
+
+ans =
+
+    85   106
+
+
+ans =
+
+    86   106
+
+
+ans =
+
+    87   106
+
+
+ans =
+
+    88   106
+
+
+ans =
+
+    89   106
+
+
+ans =
+
+    90   106
+
+
+ans =
+
+    91   106
+
+
+ans =
+
+    92   106
+
+
+ans =
+
+    93   106
+
+
+ans =
+
+    94   106
+
+
+ans =
+
+    95   106
+
+
+ans =
+
+    96   106
+
+
+ans =
+
+    97   106
+
+
+ans =
+
+    98   106
+
+
+ans =
+
+    99   106
+
+
+ans =
+
+   100   106
+
+
+ans =
+
+   101   106
+
+
+ans =
+
+   102   106
+
+
+ans =
+
+   103   106
+
+
+ans =
+
+   104   106
+
+
+ans =
+
+   105   106
+
+
+ans =
+
+   106   106
+

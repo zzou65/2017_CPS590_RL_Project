@@ -1,0 +1,182 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\title{Finite Volume code for solving convection/diffusion equations}
+\author{Eivind Fonn}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\abstract{This document details code written for the LehrFEM library during
+the summer of 2007 by Eivind Fonn, for solving convection/diffusion equations
+using the Finite Volumes approach.}
+
+\section{Background}
+
+The equation in question is
+\[ -\nabla\cdot(k\nabla u) + \nabla\cdot(cu) + ru = f \]
+on some domain $\Omega\subset\mathbb{R}^2$. Here, $k,r,f:\Omega\to\mathbb{R}$,
+and $c:\Omega\to\mathbb{R}^2$. $k$ is the diffusivity and should be positive 
+everywhere. $c$ is the velocity field.
+
+In addition to the above, one can specify Dirichlet and Neumann boundary
+conditions on various parts of $\partial\Omega$.
+
+\section{Mesh Generation and plotting}
+
+The FV mesh generation builds upon FE meshes. Given a FE mesh, use the
+{\tt add\_MidPoints} function to add the data required for the dual mesh: \\
+
+\noindent{\tt >> mesh = add\_MidPoints(mesh, method);} \\
+
+{\tt method} is a string specifying which dual mesh method to use. The two
+options are {\tt barycentric} and {\tt orthogonal}. If {\tt method}
+is not specified, the {\tt barycentric} method will be used. For the
+{\tt orthogonal} method, the mesh cannot include any obtuse triangles, and
+if any such triangle exists, an error will occur.
+
+The full mesh can be plotted using the following call: \\
+
+\noindent{\tt >> plot\_Mesh\_LFV(mesh);}
+
+\section{Assembly}
+
+Assembly of the stiffness matrices and load vector is done much the same way
+as in FE, i.e. assemble the stiffness matrices term-by-term, sum them up to get
+the full matrix. Assemble the load vector in the normal way, then incorporate
+Neumann boundary data, followed by Dirichlet boundary data.
+
+For the lazy, there is a wrapper function for all of the above: \\
+
+\noindent{\tt >> [A,U,L,fd] = assemMat\_CD\_LFV(mesh, k, c, r, d, n, f, cd, out);} \\
+
+This function assembles all the matrices and vectors required at once, without
+any hassle. Here follows a list of the input arguments:
+
+\begin{itemize}
+\item {\tt mesh} The mesh struct (see last section).
+\item {\tt k} Function handle for the $k$-function.
+\item {\tt c} Function handle for the $c$-function.
+\item {\tt r} Function handle for the $r$-function.
+\item {\tt d} Function handle for the Dirichlet boundary data.
+\item {\tt n} Function handle for the Neumann boundary data.
+\item {\tt f} Function handle for the $f$-function.
+\item {\tt cd} If equal to 1, specifies that the problem is convection-dominated,
+and that appropriate upwinding techniques should be applied. If 0, specifies
+that the problem is diffusion-dominated. If left out, the program itself will
+determine whether the problem is convection- or diffusion-dominated.
+\item {\tt out} If equal to 1, the program will write output to the console.
+This is useful for large meshes, to keep track of the program.
+\end{itemize}
+
+If any of the function handles are left out or set equal to the empty matrix, 
+it is assumed they are zero and will play no part.
+
+The output are as follows:
+
+\begin{itemize}
+\item {\tt A} The stiffness matrix.
+\item {\tt U} The solution vector, containing Dirichlet boundary data.
+\item {\tt L} The load vector.
+\item {\tt fd} A vector with the indices of the free nodes.
+\end{itemize}
+
+From the above, the solution can be obtained by: \\
+
+\noindent{\tt >> U(fd) = A(fd,fd)$\backslash$L(fd);} \\
+
+The solution vector {\tt U} contains the approximate values of the solution $u$
+at the nodes given in the mesh.
+
+\section{Error analysis}
+
+Given a mesh {\tt mesh}, a FV solution vector {\tt U} and a function handle 
+{\tt u} to the exact solution, the error can be measured in three different
+norms ($\|\cdot\|_1$, $\|\cdot\|_2$ and $\|\cdot\|_\infty$) using the 
+following calls: \\
+
+\noindent{\tt >> L1err = L1Err\_LFV(mesh, U, qr, u);} \\
+\noindent{\tt >> L2err = L2Err\_LFV(mesh, U, qr, u);} \\
+\noindent{\tt >> Linferr = LInfErr\_LFV(mesh, U, u);} \\
+
+Here, {\tt qr} is any quadrature rule for the reference element, i.e.
+{\tt qr = P7O6()}.
+
+\section{File-by-file description}
+
+Here follows a list of the files which were written as part of this project,
+and a description of each.
+
+\begin{itemize}
+\item {\tt Assembly/assemDir\_LFV.m} \\
+    {\tt [U,fd] = assemDir\_LFV(mesh,bdFlags,fHandle)} incorporates the
+    Dirichlet boundary conditions given by the function {\tt fHandle} in
+    the Finite Volume solution vector {\tt U}. {\tt fd} is a vector
+    giving the indices of the vertices with no Dirichlet boundary data
+    (i.e. the free vertices).
+\item {\tt Assembly/assemLoad\_LFV.m} \\
+    {\tt L = assemLoad\_LFV(mesh,fHandle)} assembles the load vector {\tt L}
+    for the data given by the function {\tt fHandle}.
+\item {\tt Assembly/assemMat\_CD\_LFV.m} \\
+    Wrapper function for assembly of convection/diffusion problems. See
+    above for description.
+\item {\tt Assembly/assemMat\_LFV.m} \\
+    {\tt A = assemMat\_LFV(mesh,fHandle,varargin)} assembles the global
+    stiffness matrix {\tt A} from the local element contributions given
+    by the function {\tt fHandle} and returns it in a sparse format.
+    {\tt fHandle} is passed the extra input arguments given by {\tt varargin}.
+\item {\tt Assembly/assemNeu\_LFV.m} \\
+    {\tt L = assemNeu\_LFV(mesh,bdFlags,L,qr,fHandle)} incorporates Neumann
+    boundary conditions in the load vector {\tt L} as given by the function
+    {\tt fHandle}. {\tt qr} is any 1D quadrature rule. Note: In the general
+    diffusion problem $-\nabla\cdot(k\nabla u)=f$, with Neumann boundary data
+    $\frac{\partial u}{\partial n}=g$, the function $h$ you need to pass to
+    the Neumann assembly function is $h(x)=g(x)k(x)$.
+\item {\tt Element/STIMA\_GenGrad\_LFV.m} \\
+    {\tt A = STIMA\_GenGrad\_LFV(v,mp,cp,m,bd,cH,kH,rH,cd)} calculates the
+    local element contribution to the stiffness matrix from the term
+    $\nabla\cdot(cu)$. Here, {\tt v} is a 3-by-2 matrix giving the vertices
+    of the element, {\tt mp} and {\tt cp} give the midpoints on each of the
+    edges as well as the centerpoint (that is, the dual mesh geometry).
+    {\tt m} is the method used to generate the dual mesh (not used at the
+    current time), {\tt bd} are boundary flags for the edges (not used
+    at the current time). {\tt cH} is the $c$-function, {\tt kH} is the
+    $k$-function from the diffusion term and {\tt rH} is a proper upwinding
+    function. {\tt cd} is 1 if the problem is convection-dominated and 0
+    otherwise. {\tt kH} and {\tt rH} are only used if {\tt cd=1}. If not,
+    they need not be specified.
+\item {\tt Element/STIMA\_GenLapl\_LFV.m} \\
+    {\tt A = STIMA\_GenLapl\_LFV(v,mp,cp,m,bd,kH)} calculates the local
+    element contribution to the stiffness matrix from the term
+    $-\nabla\cdot(k\nabla u)$. The arguments are the same as above.
+\item {\tt Element/STIMA\_ZerOrd\_LFV.m} \\
+    {\tt A = STIMA\_ZerOrd\_LFV(v,mp,cp,m,bd,rH)} calculates the local
+    element contribution to the stiffness matrix from the term
+    $ru$. The arguments are the same as above, except that {\tt rH} is
+    the function handle for the $r$-function.
+\item {\tt Errors/L1Err\_LFV.m} \\
+    {\tt e = L1Err\_LFV(mesh,U,qr,fHandle)} calculates the discretization
+    error in the norm $\|\cdot\|_1$, between the finite volume approximation
+    given by {\tt U} (the solution vector), and the exact solution given by
+    the function {\tt fHandle}. {\tt qr} is any appropriate quadrature rule
+    on the reference element.
+\item {\tt Errors/L2Err\_LFV.m} \\
+    {\tt e = L2Err\_LFV(mesh,U,qr,fHandle)} calculates the discretization
+    error in the norm $\|\cdot\|_2$. All the arguments are as above.
+\item {\tt Errors/LInfErr\_LFV.m} \\
+    {\tt e = LInfErr\_LFV(mesh,U,fHandle)} calculates the discretization
+    error in the norm $\|\cdot\|_\infty$. All the arguments are as above.
+\item {\tt MeshGen/add\_MidPoints.m} \\
+    {\tt mesh = add\_MidPoints(mesh,method)} incorporates the dual mesh
+    data required for the finite volume method into the mesh {\tt mesh}.
+    {\tt method} may be either {\tt 'barycentric'} or {\tt 'orthogonal'}.
+    See earlier description.
+\item {\tt Plots/plot\_Mesh\_LFV.m} \\
+    {\tt plot\_Mesh\_LFV(mesh)} plots the base mesh and the dual mesh.
+\end{itemize}
+
+\end{document}

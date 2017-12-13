@@ -1,0 +1,95 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Discretization error in L2 norm %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{$L^2$-Norm} \index{L2-norm@$L^2$-norm|(} \label{sect:l2_err}
+
+ The {\tt L2Err}-functions stored in {\tt /Lib/Errors} compute the discretization error of the finite element solution {\tt u\_FE} to the exact solution {\tt u\_EX} in the $L^2$-norm, which is defined by
+\begin{equation}
+	\Vert f \Vert_2 = \left( \int_{\Omega} |f(x)|^2 dx \right) ^{\frac{1}{2}} \quad .
+\end{equation} 
+ For the computation of the integral, the shape functions {\tt shap\_*} are used. The quadrature rule {\tt QuadRule} is to be specified in the input. General information about the input arguments and concept of computation may be found on p. \pageref{chap:err}f.
+
+
+%% Constant finite elements %%
+
+\subsection{Constant Finite Elements} \index{constant finite elements!L2-norm@$L^2$-norm}
+
+\ttitindex{L2Err\_PC} computes the discretization error in the $L^2$-norm for piecewise constant finite elements.
+
+
+%% Linear finite elements %%
+
+\subsection{Linear Finite Elements} \index{linear finite elements!L2-norm@$L^2$-norm}
+
+\subsubsection{.. in 1D}
+
+ \ttitindex{L2Err\_P1\_1D} computes the discretization error in the $L^2$-norm for 1D linear finite elements using the shape functions \ttindex{shap\_P1\_1D}. Mainly the Gauss-Legendre quadrature rule \ttindex{gauleg} is applied, e.g. in the routine \ttindex{main\_1D} in \linebreak {\tt /Examples/1D\_FEM}.
+
+\subsubsection{.. in 2D} \index{linear vector-valued finite elements!L2-norm@$L^2$-norm}
+
+ The function \ttitindex{L2Err\_LFE} computes the discretization error for linear finite elements using \ttindex{shap\_LFE} and \ttitindex{L2Err\_LFE2} the one for the vector-valued shape functions \ttindex{shap\_LFE2}. \\
+
+ For the discontinous Galerkin method \ttitindex{L2Err\_DGLFE} is used. It calls the shape functions \ttindex{shap\_DGLFE} and is currently only called by \ttindex{main\_4} in {\tt /Examples/DGFEM} with quadrature rule \ttindex{P3O3}.
+
+
+%% Bilinear finite elements %%
+
+\subsection{Bilinear Finite Elements} \index{bilinear finite elements!L2-norm@$L^2$-norm}
+
+ \ttitindex{L2Err\_BFE} makes use of \ttindex{shap\_BFE} and \ttindex{grad\_shap\_BFE} to compute the discretization error in the $L^2$-norm. A quadrature rule on the unit square $[0,1]^2$ is e.g. {\tt \ttindex{TProd}(gauleg(0,1,2)}, see \ref{ssect:quad_trans}, p. \pageref{ssect:quad_trans}.
+
+
+%% Crouzeix-Raviart finite elements %%
+
+\subsection{Crouzeix-Raviart Finite Elements} \index{Crouzeix-Raviart finite elements!L2-norm@$L^2$-norm}
+
+ Crouzeix-Raviart finite elements correspond to edges, hence the field \ttindex{Vert2Edge} of table \ref{tab:err_mesh2} is required. Furthermore, \ttitindex{L2Err\_CR} calls the shape functions \ttindex{shap\_CR} and the discontinous version \ttitindex{L2Err\_DGCR} the shape functions \ttindex{shap\_DGCR}.
+
+
+%% Quadratic finite elements %%
+
+\subsection{Quadratic Finite Elements} \index{quadratic finite elements!L2-norm@$L^2$-norm}
+
+ Similarily, 3 out of 6 quadratic shape functions correspond to edges. The discretization error \ttitindex{L2Err\_QFE} calls \ttindex{shap\_QFE} and uses \ttindex{Vert2Edge} to extract the edge numbers of the elements.
+
+ \ttitindex{L2Err\_PBD} computes the discretization error with respect to the $L^2$-norm for quadratic finite elements with parabolic boundary approximation.
+
+
+%% Whitney 1-forms %%
+
+\subsection{Whitney 1-Forms} \index{Whitney 1-forms!L2-norm@$L^2$-norm}
+
+ In \ttitindex{L2Err\_W1F} the field \ttindex{Vert2Edge} is needed too. Furthermore \ttindex{Edges} is used to determine the orientation.
+
+
+%% hpFEM %%
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!L2-norm@$L^2$-norm}
+
+\subsubsection{.. in 1D}
+
+ The function \ttitindex{L2Err\_hpDG\_1D} for the computation of the $L^2$ discretization error is called by \\
+
+\noindent {\tt >> err = L2Err\_hpDG\_1D(Coordinates,p,u,QuadRule,Shap, ... \\
+FHandle,FParam);} \\
+
+ For a explanation of the input arguments see table \ref{tab:err_hp_1d}.
+
+\subsubsection{.. in 2D}
+
+ The discretization error for the $hp$FEM is computed in a iterative procedure, more precisely the finite element solution {\tt u\_FE} is gained this way. The struct \ttindex{Elem2Dof} extracts the degrees of freedom from the elements. As in the 1-dimensional case the shape functions are not called within the program, but provided as an input. The hierarchical shape functions \ttindex{shap\_hp} are used, cf. \ref{ssect:shap_hp}, p. \pageref{ssect:shap_hp}. \ttitindex{L2Err\_hp} is called by \\
+
+\noindent {\tt >> err = L2Err\_hp(Mesh,u,Elem2Dof,QuadRule,Shap,FHandle,FParam);}
+
+
+%% Further functions %%
+
+\subsection{Further Functions}
+
+ \ttindex{L2Err\_LFV}\index{linear finite volumes!L2-norm@$L^2$-norm} computes the discretization error in $L^2$-norm for linear finite volumes (see also p. \pageref{L2Err_LFV}). \\
+
+ \ttitindex{L2Err\_PWDG} computes the $L^2$-norm discretization error for discontinuous plane waves.
+
+
+\index{L2-norm@$L^2$-norm|)}

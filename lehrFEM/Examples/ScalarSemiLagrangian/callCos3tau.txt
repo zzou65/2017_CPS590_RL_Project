@@ -1,0 +1,10 @@
+
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateLFE(8,[0.4],'exact','Cos3',0.0013); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateLFE(8,[0.8],'exact','Cos3',0.0026); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateLFE(8,[1.6],'exact','Cos3',0.0052); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateLFE(8,[3.2],'exact','Cos3',0.0104); exit;" > log.txt &
+
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateQFE(8,[0.4],'exact','Cos3',0.0013); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateQFE(8,[0.8],'exact','Cos3',0.0026); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateQFE(8,[1.6],'exact','Cos3',0.0052); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateQFE(8,[3.2],'exact','Cos3',0.0104); exit;" > log.txt &

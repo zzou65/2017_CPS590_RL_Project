@@ -1,0 +1,25 @@
+\begin{thebibliography}{1}
+
+\bibitem{PER04}
+P.-O. Persson and G.~Strang.
+\newblock A simple mesh generator in matlab.
+\newblock {\em SIAM Review}, 46(2):329--345, 2004.
+
+\bibitem{FIE00}
+D.~A. Field.
+\newblock Qualitative measures for initial meshes.
+\newblock {\em Int. J. Numer. Meth. Engng.}, 47:887--906, 2000.
+
+\bibitem{ALB00}
+A.~Schmidt and K.~G. Siebert.
+\newblock {\em ALBERT: An Adaptive Hierarchical Finite Element Toolbox}.
+\newblock Institut f{\"u}r Angewandte Mathematik,
+  Albert-Ludwigs-Universit{\"a}t, Freiburg i. Br., Hermann-Herder Str. 10,
+  D-79104 Freiburg, 1 edition, February 2000.
+
+\bibitem{MI89}
+W.~Mitchell.
+\newblock A comparsion of adaptive refinement techniques for elliptic problems.
+\newblock {\em ACM Trans. Math. Softw.}, 15:326--347, 1989.
+
+\end{thebibliography}

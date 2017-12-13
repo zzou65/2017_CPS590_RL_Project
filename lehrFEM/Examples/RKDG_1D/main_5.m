@@ -1,0 +1,9 @@
+x=([-1:0.1:1]);
+p=2*ones(size(x,2)-1,1);
+u=zeros(3*(size(x,2)-1),1);
+u(1:3:size(u,1))=1/3;
+u(2:3:size(u,1))=0;
+u(3:3:size(u,1))=2/3;
+plot_hpDG(x,p,u,@shap_Leg_1D);
+assemMat_Inn_hpDG_1D(x,p,@STIMA_InnPen_hpDG_1D);
+assemMat_Inn_hpDG_1D(x,p,@STIMA_Inn_hpDG_1D,1);

@@ -1,0 +1,76 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Discretization error in H1 semi-norm %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{$H^1$-Semi-Norm} \index{H1-semi-norm@$H^1$-semi-norm|(} \label{sect:h1s_err}
+
+ The \ttitindex{H1SErr}-functions in {\tt /Lib/Errors} compute the discretization error in the $H^1$-semi-norm, i.e.
+\begin{equation}
+	\Vert f \Vert_{H^1_s(\Omega)} = \left( \int_{\Omega} |D f(x)|^2 dx \right) ^{\frac{1}{2}}
+\end{equation} 
+ with $|D f(x)|^2 = |\partial_1 f(x)|^2+\ldots+ |\partial_n f(x)|^2$. The first $0$-order term is missing (cf. $\Vert f \Vert_{H^1}$ in \eqref{eq:H1_norm}, p. \pageref{eq:H1_norm}) which reduces it to a semi-norm. \\
+
+ Here, the function handle {\tt FHandle} specifies the gradient of the exact solution which is then given by \\
+
+\noindent {\tt >> \ttindex{grad\_u\_EX} = FHandle(x,FParam);} \\
+
+ The gradient {\tt grad\_u\_FE} is gained as in the {\tt H1Err}-functions in the previous section. Again, the {\tt grad\_shap}-functions are used for the computation. Further details are summerized on p. \pageref{chap:err}f.
+
+
+%% Linear finite elements %%
+
+\subsection{Linear Finite Elements} \index{linear finite elements!H1-semi-norm@$H^1$-semi-norm} 
+
+\subsubsection{.. in 1D}
+
+ For the 1-dimensional discretization error the $M$-by-1 matrix {\tt Coordinates} is needed. The routine \ttitindex{H1SErr\_P1\_1D} is called by \\
+
+\noindent {\tt >> err = H1SErr\_P1\_1D(Coordinates,u,QuadRule,FHandle,FParam);} \\
+
+ The values of the gradients are computed by \ttindex{grad\_shap\_P1\_1D}.
+
+\subsubsection{.. in 2D}
+
+ \ttitindex{H1SErr\_LFE} computes the discretization error in the $H^1$-semi-norm using \linebreak
+ \ttindex{grad\_shap\_LFE}. \\
+
+ \ttitindex{H1SErr\_DGLFE} measures the error for discontinuous linear Lagrangian \linebreak finite elements. The gradients of the shape functions are computed by \linebreak \ttindex{grad\_shap\_DGLFE}. In case additional element information is stored in \ttindex{ElemFlag}, it is taken into account for the computation of the gradient of the exact error {\tt grad\_u\_EX}. For the {\tt i}-th element this is \\
+
+\noindent {\tt >> \ttindex{grad\_u\_EX} = FHandle(x,ElemFlag(i),FParam);}
+
+
+%% Bilinear finite elements %%
+
+\subsection{Bilinear Finite Elements} \index{bilinear finite elements!H1-semi-norm@$H^1$-semi-norm} 
+
+ \ttitindex{H1SErr\_BFE} computes the discretization error in the $H^1$-semi-norm. The routines \ttindex{shap\_BFE} and \ttindex{grad\_shap\_BFE} are both needed, the first just for the transformation of the quadrature points.
+
+
+%% Crouzeix-Raviart finite elements %%
+
+\subsection{Crouzeix-Raviart Finite Elements} \index{Crouzeix-Raviart finite elements!H1-semi-norm@$H^1$-semi-norm} 
+
+ With the help of \ttindex{grad\_shap\_CR} the function \ttitindex{H1SErr\_CR} computes the discretization error for Crouzeix-Raviart elements and \ttitindex{H1SErr\_DGCR} the discretization error for the discontinuous Crouzeix-Raviart elements. Optional element information stored in the {\tt Mesh} field \ttindex{ElemFlag} may be taken into account in the latter. The field \ttindex{Vert2Edge} is obligatory.
+
+
+%% Quadratic finite elements %%
+
+\subsection{Quadratic Finite Elements} \index{quadratic finite elements!H1-semi-norm@$H^1$-semi-norm} 
+
+ The discretization error in the $H^1$-semi-norm for quadratic finite element is computed by \ttitindex{H1SErr\_QFE}. The {\tt Mesh} field \ttindex{Vert2Edge} is required. \\
+
+ Similar to \ttindex{H1Err\_PBD} (see \ref{ssect:h1err_qfe}) the function \ttitindex{H1SErr\_PBD} provides the discretization error for quadratic finite elements with parabolic boundary approximation. \\
+
+
+%% hpFEM %%
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!H1-semi-norm@$H^1$-semi-norm} 
+
+ The discretization error in the $H^1$-semi-norm for $hp$ finite elements is evaluated by \ttitindex{H1SErr\_hp}. It is called by \\
+
+\noindent {\tt >> err = H1Err\_hp(Mesh,u,Elem2Dof,QuadRule,Shap,FHandle,FParam);} \\
+
+ For further information on the input parameters see \ref{ssect:h1err_hp}, p. \pageref{ssect:h1err_hp}. \\
+
+
+\index{H1-semi-norm@$H^1$-semi-norm|)}

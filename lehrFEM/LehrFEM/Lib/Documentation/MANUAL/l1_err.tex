@@ -1,0 +1,48 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Discretization error in L1 norm %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{$L^1$-Norm} \index{L1-norm@{$L^1$-norm}} \label{sect:l1_err}
+
+ The discretizatin error in the $L^1$-norm is computed by the {\tt L1Err}-functions stored in {\tt /Lib/Errors}. The norm is defined by
+\begin{equation}
+	\Vert f \Vert_2 = \int_{\Omega} |f(x)| dx \quad .
+\end{equation} 
+
+ The required input arguments are listed on p. \pageref{chap:err}f.
+
+
+\subsection{Crouzeix-Raviart Finite Elements} \index{Crouzeix-Raviart finite elements!L1-norm@$L^1$-norm}
+
+ The finite element solution {\tt u\_FE} is computed using the shape functions \ttindex{shap\_DGCR}, \ttitindex{L1Err\_DGCR} determines the discretization error in the $L^1$-norm. As usual it is called by \\
+
+\noindent {\tt >> err = L1Err\_DGCR(Mesh,u,QuadRule,FHandle,FParam);}
+
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!L1-norm@$L^1$-norm}
+
+ The finite element discretization error is computed in \ttitindex{L1Err\_hpDG\_1D}. It is called by \\
+
+\noindent {\tt >> err = L1Err\_hpDG\_1D(Coordinates,p,u,QuadRule,Shap, ... \\
+FHandle,FParam);} \\
+
+ Obviously the input arguments for the $hp$FEM differ from the previous mentioned input at the beginning of the chapter. For the 1-dimensional function {\tt L1Err\_hpDG\_1D} the required data is listed in table \ref{tab:err_hp_1d}.
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+    \ttindex{Coordinates} & {\small $n+1$ mesh points} \\
+    {\tt p} & {\small polynomial approxiamtion of each of the $n$ cells} \\
+    {\tt u} & {\small solution for the last step} \\
+    {\tt QuadRule} & {\small 1D quadrature rule (cf. \ref{sect:quad_rule_1d}, p. \pageref{sect:quad_rule_1d})} \\
+    {\tt Shap} & {\small basis functions evaluated at quadrature points (e.g. \ttindex{shap\_Leg\_1D}, see \ref{ssect:shap_Leg}, p. \pageref{ssect:shap_Leg})} \\
+    {\tt FHandle} & {\small function handle of the exact solution} \\
+    {\tt FParam} & {\small variable length argument list to {\tt FHandle}}
+  \end{tabular}
+  \caption{Input arguments for {\tt L1Err\_hpDG\_1D} and \ttindex{L2Err\_hpDG\_1D}}
+  \label{tab:err_hp_1d}
+\end{table}
+
+
+\subsection{Linear Finite Volumes} \index{linear finite volumes!L1-norm@$L^1$-norm}
+
+ \ttitindex{L1Err\_LFV} computes the discretization error in $L^1$-norm for linear finite volumes, \ttindex{shap\_LFE} is called within the program. See section \ref{sect:fvm_conv_diff}, p. \pageref{sect:fvm_conv_diff}, for the context. \\

@@ -1,0 +1,14 @@
+% List of elements
+%
+%   User  :  MEURY
+%   Date  :  13-Jun-2005 11:18:04
+%
+%   The first column contains the global index of each element.
+%
+
+1      1      2      3    
+2      3      4      5    
+3      3      5      7    
+4      1      3      8 
+5      3      7      6
+6      8      3      6

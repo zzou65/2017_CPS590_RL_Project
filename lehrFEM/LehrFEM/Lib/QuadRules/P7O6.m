@@ -1,0 +1,39 @@
+function QuadRule = P7O6()
+% P7O6 2D Quadrature rule.
+%
+%   QUADRULE = P7O6() computes a 7 point Gauss quadrature rule of order 6
+%   (exact for all polynomials up to degree 5) on the reference element.
+%
+%   QUADRULE is a struct containing the following fields:
+%    w Weights of the quadrature rule
+%    x Abscissae of the quadrature rule (in reference element)
+%
+%   To recover the barycentric coordinates xbar of the quadrature points
+%    xbar = [QuadRule.x, 1-sum(QuadRule.x)'];
+%
+%   Example:
+%
+%   QuadRule = P7O6();
+
+%   Copyright 2005-2005 Patrick Meury
+%   SAM - Seminar for Applied Mathematics
+%   ETH-Zentrum
+%   CH-8092 Zurich, Switzerland
+
+  QuadRule.w = [                9/80; ...
+                 (155+sqrt(15))/2400; ...
+                 (155+sqrt(15))/2400; ...
+                 (155+sqrt(15))/2400; ...
+                 (155-sqrt(15))/2400; ...
+                 (155-sqrt(15))/2400; ...
+                 (155-sqrt(15))/2400 ];
+            
+  QuadRule.x = [               1/3               1/3; ...
+                   (6+sqrt(15))/21   (6+sqrt(15))/21; ...
+                 (9-2*sqrt(15))/21   (6+sqrt(15))/21; ...
+                   (6+sqrt(15))/21 (9-2*sqrt(15))/21; ...
+                   (6-sqrt(15))/21 (9+2*sqrt(15))/21; ...
+                 (9+2*sqrt(15))/21   (6-sqrt(15))/21; ...
+                   (6-sqrt(15))/21   (6-sqrt(15))/21 ];
+     
+return

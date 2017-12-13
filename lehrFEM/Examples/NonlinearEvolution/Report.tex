@@ -1,0 +1,156 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amssymb,amsthm,amsfonts}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[final]{showkeys}
+\usepackage[numbered,framed]{mcode}
+
+
+\title{The Fitzhugh-Nagumo System: F.D. and F.E. (by LehrFEM Library) Implementations}
+\author{Frederico Santos Teixeira}
+
+\begin{document}
+
+\maketitle
+
+This report presents the results of the application of the Finite Element Method in a linearized system of equations, derived from FitzHugh-Nagumo Model:
+\begin{gather*}
+	\partial_t u = d_u^2 \Delta u + \lambda u - \sigma v + \kappa
+	\\
+	\tau \partial_t v = d_v^2 \Delta v + u - v
+\end{gather*}
+where the domain is $ \Omega = [-1, 1]^2 $ and the coefficients are $ d_u^2 = 0.00028 $, $ lambda = 1 $, $ sigma = 1 $, $ kappa = -0.05 $, $ tau = 0.1 $ and $ d_v^2 = 0.005 $.
+
+We are considering no-flux boundary condition, i.e. $ \frac{\partial u}{\partial n} = 0 $ and $ \frac{\partial v}{\partial n} = 0  $, along with noisy initial condition around zero (but greater than zero) for both variables.
+
+After the variational formulation, we set $ u(x,t) = \sum_{i=1}^{N} \mu (t) . b_N^i (x) $ and  $ v(x,t) = \sum_{i=1}^{N} \nu(t) . b_N^i(x) $ plus a piecewise linear basis function over a triangular mesh to achieve:
+\begin{gather*}
+\overrightarrow{\mu}_t = M^{-1} A \overrightarrow{\mu} + F(\overrightarrow{\mu}, \overrightarrow{\nu})
+\\
+\tau \overrightarrow{\nu}_t = M^{-1} A \overrightarrow{\nu} + G(\overrightarrow{\mu}, \overrightarrow{\nu})
+\end{gather*}
+where $ F(\overrightarrow{\mu}, \overrightarrow{\nu}) = \lambda \overrightarrow{\mu} - \sigma \overrightarrow{\nu} + \kappa $ and $ G(\overrightarrow{\mu}, \overrightarrow{\nu}) = \overrightarrow{\mu} - \overrightarrow{\nu} $. 
+
+The matrix $ M $ and $ A $ are the Mass and Galerkin matrices, respectively, corresponding to the basis choice.
+
+As from now we split the procedure into two different branches: 
+\begin{enumerate}
+\item we create functions to compute the Mass and Galerkin matrices and we show the results using MATLAB functions;
+\item we solve the whole steps using LehrFEM Library: mesh generation and refinement, assembly local elements and plot solution.
+\end{enumerate}
+
+The system can be solved by means of three solvers: "ODE45" or "ODE23S" or "SemiImplicitEuler". A flag in the code leads to the user choice.
+
+Both codes follow, along with some solutions' pictures achieved by the three different solvers. The picture on the right represents the $u$ variable, while the picture on the left represents the $v$. Both of them were taken after 1000 time steps.
+
+Here we present the code for the first branch:
+\lstinputlisting{Codes/FHN.m}
+The results follow below:
+
+$u$ and $v$ by means of "ODE45":
+
+\includegraphics[height=60mm]{FHN/mi_ODE45.jpg}
+\includegraphics[height=60mm]{FHN/nu_ODE45.jpg}
+
+$u$ and $v$ by means of "ODE23S":
+
+\includegraphics[height=60mm]{FHN/mi_ODE23S.jpg}
+\includegraphics[height=60mm]{FHN/nu_ODE23S.jpg}
+
+$u$ and $v$ by means of "ImplicitEuler":
+
+\includegraphics[height=60mm]{FHN/mi_ImplicitEuler.jpg}
+\includegraphics[height=60mm]{FHN/nu_ImplicitEuler.jpg}
+
+There are two functions which generate the Mass and Galerkin Matrices:
+
+\lstinputlisting{Codes/MassMatrix.m}
+\lstinputlisting{Codes/GalerkinMatrix.m}
+
+Now the code for the second branch:
+
+\lstinputlisting{Codes/FHN_LehrFEM.m}
+
+The results follow below:
+
+$u$ and $v$ by means of "ODE45":
+
+\includegraphics[height=60mm]{LehrFEM/mi_ODE45.jpg}
+\includegraphics[height=60mm]{LehrFEM/nu_ODE45.jpg}
+
+$u$ and $v$ by means of "ODE23S":
+
+\includegraphics[height=60mm]{LehrFEM/mi_ODE23S.jpg}
+\includegraphics[height=60mm]{LehrFEM/nu_ODE23S.jpg}
+
+$u$ and $v$ by means of "ImplicitEuler":
+
+\includegraphics[height=60mm]{LehrFEM/mi_ImplicitEuler.jpg}
+\includegraphics[height=60mm]{LehrFEM/nu_ImplicitEuler.jpg}
+
+The code showed below is used to solve this system:
+
+\lstinputlisting{Codes/nlevolution.m}
+
+Also, fixing a initial condition and giving a time step, we can evaluate the behavior of the solution after a mesh refinement.
+
+\begin{enumerate}
+
+\item $u$ and $v$ for $timestep = 0.1$, $time = 50$ and $289$ elements in the mesh:
+
+\includegraphics[height=60mm]{ImplicitEuler_1/mi289.jpg}
+\includegraphics[height=60mm]{ImplicitEuler_1/nu289.jpg}
+
+\item $u$ and $v$ for $timestep = 0.1$, $time = 50$ and $1089$ elements in the mesh:
+
+\includegraphics[height=60mm]{ImplicitEuler_1/mi1089.jpg}
+\includegraphics[height=60mm]{ImplicitEuler_1/nu1089.jpg}
+
+\item $u$ and $v$ for $timestep = 0.1$, $time = 50$ and $4225$ elements in the mesh:
+
+\includegraphics[height=60mm]{ImplicitEuler_1/mi4225.jpg}
+\includegraphics[height=60mm]{ImplicitEuler_1/nu4225.jpg}
+
+\item $u$ and $v$ for $timestep = 0.1$, $time = 50$ and $16641$ elements in the mesh:
+
+\includegraphics[height=60mm]{ImplicitEuler_1/mi16641.jpg}
+\includegraphics[height=60mm]{ImplicitEuler_1/nu16641.jpg}
+
+\end{enumerate}
+
+For the next tests we set a new time step.
+
+\begin{enumerate}
+
+\item $u$ and $v$ for $timestep = 0.01$, $time = 50$ and $289$ elements in the mesh:
+
+\includegraphics[height=60mm]{ImplicitEuler_01/mi289.jpg}
+\includegraphics[height=60mm]{ImplicitEuler_01/nu289.jpg}
+
+\item $u$ and $v$ for $timestep = 0.01$, $time = 50$ and $1089$ elements in the mesh:
+
+\includegraphics[height=60mm]{ImplicitEuler_01/mi1089.jpg}
+\includegraphics[height=60mm]{ImplicitEuler_01/nu1089.jpg}
+
+\item $u$ and $v$ for $timestep = 0.01$, $time = 50$ and $4225$ elements in the mesh:
+
+\includegraphics[height=60mm]{ImplicitEuler_01/mi4225.jpg}
+\includegraphics[height=60mm]{ImplicitEuler_01/nu4225.jpg}
+
+\item $u$ and $v$ for $timestep = 0.01$, $time = 50$ and $16641$ elements in the mesh:
+
+\includegraphics[height=60mm]{ImplicitEuler_01/mi16641.jpg}
+\includegraphics[height=60mm]{ImplicitEuler_01/nu16641.jpg}
+
+\end{enumerate}
+
+We fixed the initial condition given by the function:
+
+\lstinputlisting{Codes/InitialCondition.m}
+
+This sort of results can be achieved for each solver described above.
+
+\end{document}

@@ -1,0 +1,159 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% incorporating Neumann boundary conditions %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Neumann Boundary Conditions} \label{sect:assem_neu} \index{boundary conditions!Neumann boundary conditions|(}
+
+The structure for the incorporation of the Neumann boundary conditions into the right hand side load vector {\tt L} is similar to the Dirichlet case described in the previous section. The functions are called {\tt assemNeu} and are also stored in the folder {\tt /Lib/Assembly}. The Neumann boundary conditions specify the values that the normal derivative of a solution is to take on the boundary of the domain. \\
+
+ Generally the assembly functions for the incorporation of the Neumann boundary conditions into the right hand side load vector {\tt L} are e.g. called by \\
+
+\noindent {\tt >> L = assemNeu\_LFE(Mesh,BdFlag,L,QuadRule,FHandle,FParam);} \\
+
+ The struct {\tt Mesh} must contain the fields {\tt Coordinates}, {\tt Elements} and {\tt BdFlags} as well as \ttindex{EdgeLoc} and \ttindex{Edge2Elem} as specified in table \ref{tab:bound_mesh} resp. table \ref{tab:dir_hp}. Again, the integers {\tt BdFlag} specify the edges on which the boundary conditions are enforced. {\tt L} is the right hand side load vector as computed by the {\tt assemLoad}-functions, cf. section \ref{sect:assem_load}, p. \pageref{sect:assem_load}. The 1D struct {\tt QuadRule}\index{quadrature rules} is used to do the numerical integration along the edges, see table \ref{tab:quad_rule}, p. \pageref{tab:quad_rule}, for its data structure. Finally, {\tt FHandle} is the function handle which describes the Neumann boundary conditions, and {\tt FParam} its variable length parameter list. \\
+ 
+ 
+The code in the case of linear finite elements can be found below.
+
+\begin{lstlisting}
+function L = assemNeu_LFE(Mesh,BdFlags,L,QuadRule,FHandle,varargin)
+%   Copyright 2005-2005 Patrick Meury & Kah-Ling Sia
+%   SAM - Seminar for Applied Mathematics
+%   ETH-Zentrum
+%   CH-8092 Zurich, Switzerland
+
+% Initialize constants
+
+nCoordinates = size(Mesh.Coordinates,1);
+nGauss = size(QuadRule.w,1);
+  
+% Precompute shape functions
+  
+N = shap_LFE([QuadRule.x zeros(nGauss,1)]);
+  
+Lloc = zeros(2,1);
+for j1 = BdFlags
+  
+  % Extract Neumann edges
+  
+  Loc = get_BdEdges(Mesh);
+  Loc = Loc(Mesh.BdFlags(Loc) == j1);
+    
+  for j2 = Loc'
+        
+    % Compute element map
+      
+    if(Mesh.Edge2Elem(j2,1))
+          
+      % Match orientation to left hand side element
+        
+      Elem = Mesh.Edge2Elem(j2,1);
+      EdgeLoc = Mesh.EdgeLoc(j2,1);
+      id_s = Mesh.Elements(Elem,rem(EdgeLoc,3)+1);
+      id_e = Mesh.Elements(Elem,rem(EdgeLoc+1,3)+1);
+          
+    else
+        
+      % Match orientation to right hand side element  
+          
+      Elem = Mesh.Edge2Elem(j2,2);
+      EdgeLoc = Mesh.EdgeLoc(j2,2);
+      id_s = Mesh.Elements(Elem,rem(EdgeLoc,3)+1);
+      id_e = Mesh.Elements(Elem,rem(EdgeLoc+1,3)+1);
+        
+    end
+    Q0 = Mesh.Coordinates(id_s,:);
+    Q1 = Mesh.Coordinates(id_e,:);
+    x = ones(nGauss,1)*Q0+QuadRule.x*(Q1-Q0);
+    dS = norm(Q1-Q0);
+      
+    % Evaluate Neumannn boundary data
+      
+    FVal = FHandle(x,j1,varargin{:});
+      
+    % Numerical integration along an edge
+    
+    Lloc(1) = sum(QuadRule.w.*FVal.*N(:,1))*dS;
+    Lloc(2) = sum(QuadRule.w.*FVal.*N(:,2))*dS;
+  
+    % Add contributions of Neumann data to load vector
+      
+    L(id_s) = L(id_s)+Lloc(1);
+    L(id_e) = L(id_e)+Lloc(2);
+      
+  end    
+end
+  
+return
+\end{lstlisting}
+
+The incorporation of the Neumann data always follows roughly along the same lines.
+
+\begin{itemize}
+ \item initialize constants and compute shape function values in quadrature points (lines 7-16)
+ \item loop over all Neumann boundary edges (lines 17-67)
+ \begin{itemize}
+  \item determine corresponding boundary element and adjust orientation to element (lines 28-46)
+  \item compute element mapping and value of the normal derivative that is to prescribe on the edge (lines 47-54)
+  \item compute local load vector (line 56-59)
+  \item add local load vector to the global load vector (line 61-64)
+ \end{itemize}
+\end{itemize}
+
+
+
+ The output {\tt L} is the right hand side load vector which inherits the Neumann boundary conditions:
+
+\begin{table}[htb]
+  \begin{tabular}{p{0.5cm}p{10.5cm}}
+	{\tt L} & {\small $M$-by-$1$ matrix which contains the right hand side load vector with incorporated Neumann boundary conditions. The entries remain unchanged on non-boundary terms, otherwise the contributions of the Neumann boundary data is added.} \\
+  \end{tabular}
+  \caption{Output of the {\tt assemNeu}-functions\index{boundary conditions!Neumann boundary conditions!output}}
+  \label{tab:neu_out}
+\end{table}
+
+
+
+%%% linear FE %%%
+
+\subsection{Linear Finite Elements} \index{linear finite elements!Neumann boundary conditions}
+
+\subsubsection{.. in 1D}
+
+ Again, in the 1-dimensional case, no shape functions nor boundary flags are required. The \ttitindex{assemNeu\_P1\_1D}-function is called by \\
+
+\noindent {\tt >> L = assemNeu\_P1\_1D(Coordinates,NNodes,L,FHandle,FParam);} \\
+
+ and adds the Neumann boundary contributions given by {\tt FHandle} to the vertices {\tt NNodes}.
+
+\subsubsection{.. in 2D}
+
+ In \ttitindex{assemNeu\_LFE} the shape functions from \ttindex{shap\_LFE} are called.
+
+
+%%% bilinear FE %%%
+
+\subsection{Bilinear Finite Elements} \index{bilinear finite elements!Neumann boundary conditions}
+
+ The shape functions \ttindex{shap\_BFE} are used in \ttitindex{assemNeu\_BFE}.
+
+
+%%% quadratic FE %%%
+
+\subsection{Quadratic Finite Elements} \index{quadratic finite elements!Neumann boundary conditions}
+
+ In \ttitindex{assem\_QFE} three modifications to the original load vector are to be made, two w.r.t. vertex shape functions and one w.r.t. the respective edge shape function from \ttindex{shap\_QFE}.
+
+
+%%% hp FE %%%
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!Neumann boundary conditions}
+
+ The routine \ttitindex{assemNeu\_hp} for the $hp$FEM requires the additional inputs \ttindex{Elem2Dof} and {\tt Shap} (cf. \ref{ssect:hp_dir}). The program is called by \\
+
+\noindent {\tt >> L = assemNeu\_hp(Mesh,Elem2Dof,L,BdFlag,QuadRule,Shap, ... \\
+FHandle,FParam);} \\
+
+ There is not a big difference to the operations described before. Just the values of the shape functions have to be computed beforehand and not in the program {\tt assemNeu\_hp} itself. The struct {\tt Elem2Dof} is needed in order to extract the dof numbers of the edges. \\
+
+\index{boundary conditions!Neumann boundary conditions|)} \index{boundary conditions|)}

@@ -1,0 +1,25 @@
+Code by Rajdeep Deb:
+
+LagrangianMainSolver.m : Final IBVP Solver. We need To specify here the mesh domain, final time when solution is desired,
+                         Diffusion Coefficient and Number of time steps. Also the handle functions corresponding to 
+                         Initial Condition, Boundary Condition, Source Function, Convection Vector.
+
+SemiLagrangian_LFE.m : It computes the mass matrix, laplacian stiffness matrix and load vector for integral of u(x-tau*v)*v(x),
+                      in each of the element.
+
+computeLoadIntegral.m : It computes the value of integral u(x-tau*v)*v(x) for a given triangular element. Quadrature rule used
+                       here is P3O2() for computational efficiency. To change this we have to change in the SemiLagrangian_LFE
+
+SourceLoad.m : Computes the source vector for a given source function
+
+triangleSearch.m : Searches whether a given point exist inside a particular triangular element. If it exists it returns the
+                  value of linear interpolated shape functions at that point.
+
+
+> We have talked to Heumann and started implementing the semi lagrangian method in
+Lehr FEM. As we discussed with +heumann, we have to search the point (x-v*tau) to
+which triangle it belong for doing the integration of +U[j-1](x-v*tau) * v(x) in a
+specific triangle. I have only one doubt before implementing the code, If some point
++(x-v*tau) falls outside the mesh domain what should we use for U[j-1](x-v*tau). Is
+it 0 there as homogeneous +Boundary condition of the boundary is also applied for any
+point outside the boundary.

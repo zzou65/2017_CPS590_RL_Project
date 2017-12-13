@@ -1,0 +1,188 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% assembling of load vectors %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Assembling the Load Vector} \label{sect:assem_load} \index{assembling!load vector|(}
+
+ The right-hand side is treated in a similar manner, i.e. the assembling of the load vector is also element-based. The input arguments are {\tt Mesh}, {\tt QuadRule}\index{quadrature rules} and {\tt FHandle}. The struct {\tt Mesh} must contain the fields {\tt Coordinates}, {\tt Elements} and {\tt ElemFlag} which are described in the table \ref{tab:assem_mesh}, p. \pageref{tab:assem_mesh}. The Gauss quadrature for the integration is specified in {\tt QuadRule}, where the field {\tt w} stands for 'weights' and {\tt x} for 'abscissae', cf. table \ref{tab:quad_rule}, p. \pageref{tab:quad_rule}. {\tt FHandle} is a function handle for the right hand side of the differential equation. \\
+
+ The {\tt assemLoad}-functions are stored in {\tt /Lib/Assembly} and are e.g. called by \\
+
+\noindent {\tt >> \ttindex{L} = \ttindex{assemLoad\_LFE}(Mesh,QuadRule,FHandle);} \\
+\noindent {\tt >> L = assemLoad\_LFE(Mesh,QuadRule,FHandle,FParam);} \\
+
+The code for the linear finite elements can be found below.
+
+\begin{lstlisting}
+function L = assemLoad_LFE(Mesh,QuadRule,FHandle,varargin)
+%   Copyright 2005-2005 Patrick Meury
+%   SAM - Seminar for Applied Mathematics
+%   ETH-Zentrum
+%   CH-8092 Zurich, Switzerland
+ 
+% Initialize constants
+ 
+nPts = size(QuadRule.w,1);
+nCoordinates = size(Mesh.Coordinates,1);
+nElements = size(Mesh.Elements,1);
+ 
+% Preallocate memory
+ 
+L = zeros(nCoordinates,1);
+ 
+% Precompute shape functions
+ 
+N = shap_LFE(QuadRule.x);
+
+% Assemble element contributions
+
+for i = 1:nElements
+  
+  % Extract vertices
+  
+  vidx = Mesh.Elements(i,:);
+   
+  % Compute element mapping
+  
+  bK = Mesh.Coordinates(vidx(1),:);
+  BK = [Mesh.Coordinates(vidx(2),:)-...
+  	bK; Mesh.Coordinates(vidx(3),:)-bK];
+  det_BK = abs(det(BK));
+  
+  x = QuadRule.x*BK + ones(nPts,1)*bK;
+  
+  % Compute load data
+  
+  FVal = FHandle(x,Mesh.ElemFlag(i),varargin{:});
+  
+  % Add contributions to global load vector
+  
+  L(vidx(1))=L(vidx(1))+sum(QuadRule.w.*FVal.*N(:,1))*det_BK;
+  L(vidx(2))=L(vidx(2))+sum(QuadRule.w.*FVal.*N(:,2))*det_BK;
+  L(vidx(3))=L(vidx(3))+sum(QuadRule.w.*FVal.*N(:,3))*det_BK;
+    
+end
+  
+return
+\end{lstlisting}
+
+
+ The load vector {\tt L} is provided as $M$-by-$1$ matrix, where the $i$-th entry implies the contribution of the $i$-th finite element. \\
+
+ The computation follows the steps below:
+ \begin{itemize}
+  \item initialization of constants and allocation of memory (lines 9-15)
+  \item computation of the shape functions in the quadrature points on the reference triangle (line 19)
+  \item loop over all elements (lines 23-48)
+  \begin{itemize}
+   \item compute element mapping and determine the local degrees of freedom (lines 27-36)
+   \item compute right hand side function value in transformed quadrature points (line 40)
+   \item add local load contribution to the global vector; integration over the reference triangle (lines 44-46)
+  \end{itemize}
+ \end{itemize}
+
+ 
+ Generally the corresponding shape function\index{shape functions} values are precomputed in the program at the given quadrature points {\tt QuadRule.x}, i.e. {\tt shap\_LFE} is called in this case. The respective shape functions may be found in {\tt /Lib/Elements}, cf. section \ref{sect:shap}, p. \pageref{sect:shap}. \\
+
+ In contrast to the assembling of the matrices, the element transformations (to the standard reference element) are computed within the {\tt assemLoad}-files. The load data for the {\tt i}-th element is then computed at the standard points {\tt x} by \\
+
+\noindent {\tt >> FVal = FHandle(x,Mesh.ElemFlag(i),FParam);} \\
+
+ Usually the integrals can't be evaluated exactly and therefore have to be approximated by a quadrature rule. Different implemented quadrature rules may be found in {\tt /Lib/QuadRules}, cf. chapter \ref{chap:quad_rule}, p. \pageref{chap:quad_rule}.
+
+
+%%% constant FE %%%
+
+\subsection{Constant Finite Elements} \index{constant finite elements!assembling of the load vector}
+
+ \ttitindex{assemLoad\_P0} assembles the constant finite element contributions. In this case there is obviously no need for the computation of the shape functions.
+
+
+%%% linear FE %%%
+
+\subsection{Linear Finite Elements} \index{linear finite elements!assembling of the load vector}
+
+\subsubsection{.. in 1D}
+
+ In \ttitindex{assemLoad\_P1\_1D} the function \ttindex{shap\_P1\_1D} is called to compute the values of the shape functions at the quadrature points. The evaluation of the transformation matrix is exceptionally easy. After computing the element load data with the given right-hand side {\tt FHandle} they are added up.
+
+% {\tt assemLoad\_P1\_1D} is called by {\tt /Examples/1D\_FEM/main\_1D} using the Gauss-Legendre quadrature rule {\tt gauleg}. Linear finite elements in 1D are also used for the 1D wave equation with absorbing boundary conditions and with perfectly matched layer, see {\tt /Examples/WaveEq/main\_ABC\_1D} and {\tt ..main\_PML\_1D}.
+
+
+\subsubsection{.. in 2D}
+
+ For the computation of the values of the linear shape functions at the quadrature points \ttindex{shap\_LFE} is used. The transformation and assembly is done in \ttitindex{assemLoad\_LFE} as discussed above. \\
+
+% Linear finite elements are used for various problems, e.g. AMG \textcolor{pink}{(algebraic multigrid solvers?)}, piecewise linear finite element solver in {\tt main\_LFE}, minimal surface problems in {\tt /Examples/MinimalSurface/minSurfFPI} and {\tt ..minSurfNewton} etc.
+
+ \index{linear vector-valued finite elements!assembling of the load vector}
+ The vector-valued function \ttitindex{assemLoad\_LFE2} works analogously using the shape functions in \ttindex{shap\_LFE2}. % They are for example used in {\tt main\_LFE2\_Sqr} and other scripts contained in the folder {\tt /Examples/LFE2}.
+
+
+%%% bilinear FE %%%
+
+\subsection{Bilinear Finite Elements} \index{bilinear finite elements!assembling of the load vector}
+
+ The program \ttitindex{assemLoad\_BFE} assembles the bilinear finite element contributions. For each element, first the vertex coordinates are extracted and renumbered and then the 4 shape function \ttindex{shap\_BFE} and its gradient \ttindex{grad\_shap\_BFE} are evaluated at the quadrature points {\tt QuadRule.x}. Finally the transformation to the reference element $[0,1]^2$ and the local load data {\tt FVal} are computed and the contributions are added to the global load vector.
+
+% The bilinear case is e.g. used for the heat equation and the Laplacian, and for the assembly of multigrid data. There {\tt assemLoad\_BFE} is called by the routines {\tt main\_Heat\_BFE}, {\tt main\_Lapl\_BFE\_str} and {\tt ..\_ustr} \textcolor{pink}{(difference?)}, {\tt main\_MBC\_BFE} and {\tt mg\_STIMA}.
+
+
+%%% Crouzeix-Raviart FE %%%
+
+\subsection{Crouzeix-Raviart Finite Elements} \index{Crouzeix-Raviart finite elements!assembling of the load vector}
+
+ \ttitindex{assemLoad\_CR} does the assemly for the Crouzeix-Raviart finite elements. For every element the values of the 3 shape functions in \ttindex{shap\_CR} are precomputed. Then vertices and connecting edges are extracted and renumbered and the element mapping is computed. The local load data is evaluated and added to the global load vector.
+
+% In {\tt /Examples/CR/main\_Lapl\_CR} it is applied to the Laplacian with right-hand side $(x_1, x_2) \mapsto 2 \pi^2 \cos(\pi x_1) \cos(\pi x_2)$ using quadrature rule {\tt P7O6}.
+
+
+%%% quadratic FE %%%
+
+\subsection{Quadratic Finite Elements} \index{quadratic finite elements!assembling of the load vector}
+
+ In order to assemble the contributions of the quadratic finite elements in \linebreak
+ \ttitindex{assemLoad\_QFE}, the struct {\tt Mesh} must additionally contain the fields {\tt Edges} and {\tt Vert2Edge} cause 3 out of the 6 shape functions are edge supported. The function \ttindex{shap\_QFE} is used to compute the values of the shape functions, cf. \ref{sssect:shap_QFE}.
+
+% The quadratic finite elements are e.g. used in {\tt /Examples/QFE\_LFE/main\_QFE}.
+
+
+%%% Whitney 1-forms %%%
+
+\subsection{Whitney 1-Forms} \index{Whitney 1-forms!assembling of the load vector}
+
+ In \ttitindex{assemLoad\_W1F} the shape functions \ttindex{shap\_W1F} are evaluated at the quadrature points. The vertices and edges are extracted from the mesh and the transformation is computed. %, where the inverse matrix is needed too. \textcolor{pink}{Formulas or citiation?}
+Because the Whitney 1-forms are connected to edges, the fields {\tt Vert2Edge} and {\tt Edges} of {\tt Mesh} are also required.
+
+
+\subsection{DG finite elements}
+
+As mentioned in Section \ref{sec:load} for DG finite elements the computation of the load vector is divided into two steps. Firstly the volume contributions, which are assembled using the \texttt{assemLoad\_Vol\_DG}
+
+%%% hp finite elments %%%
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!assembling of the load vector}
+
+\subsubsection{.. in 1D}
+
+ The 1D assembly \ttitindex{assemLoad\_hpDG\_1D} of the $hp$FEM contributions is called by \\
+
+\noindent {\tt >> L = assemLoad\_hpDG\_1D(Coordinates,p,QuadRule,Shap, ... \\
+FHandle,FParam);} \\
+
+ The global load vector consists of  $ \mathtt{sum(p)} + \sharp$ Coordinates $-1$ elements. The transformation depends only on {\tt h} and hence is easy to compute. The local load data is calculated and the global load vector then computed using the given shape function {\tt Shap} (e.g. Legendre polynomials, cf. \ref{ssect:shap_Leg}, p. \pageref{ssect:shap_Leg}) and the quadrature rule {\tt QuadRule}.
+
+% The 1D $hp$DG method is for example used for the Burgers problem, the linear advection problem etc. and mostly applied to {\tt shap\_Leg\_1D}.
+
+\subsubsection{.. in 2D}
+
+ The function {\tt assemLoad\_hp}\index{assemLoad\_hp@{\tt assemLoad\_hp}} assembles the global load vector for the $hp$FEM contributions and is called by \\
+
+\noindent {\tt >> L = assemLoad\_hpDG(Mesh,Elem2Dof,QuadRule,Shap,FHandle,FParam);} \\
+
+ As usual, in the beginning the vertices of the local element are extracted, and in this case also the polynomial degree and edge orientations stored in \ttindex{Elem2Dof}. The element map, function values and the element load vectors for vertex/edge/ele\-ment shape functions are computed and added to the global load vector.
+
+% The $hp$ method is used in {\tt /Examples/hp} with shape functions {\tt shap\_hp} and the 1D Gauss-Legendre quadrature {\tt gauleg} modified for 2D by {\tt TProd} and {\tt Duffy}.
+
+\index{assembling!load vector|)}

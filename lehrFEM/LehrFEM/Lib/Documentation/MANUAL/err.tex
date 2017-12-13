@@ -1,0 +1,84 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Discretization Errors %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Discretization Errors} \index{discretization errors|(} \index{norms|(} \label{chap:err}
+
+ The following (semi-)norms monitor the difference between the computed finite element solution\index{solution!finite element} (using the \textbackslash-operator in MATLAB to compute the coefficient vector {\tt u}) and the exact solution\index{solution!exact} given by the function handle {\tt FHandle}. The respective error functions are stored in the folder {\tt /Lib/Errors}. There the abbreviations stand for
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+    {\tt H1Err\_*} & {\small discretization error in the $H^1$-norm for finite element *} \\
+    {\tt H1SErr\_*} & {\small discretization error in the $H^1$-semi-norm for finite element *} \\
+    {\tt L1Err\_*} & {\small discretization error in the $L^1$-norm for finite element *} \\
+    {\tt L2Err\_*} & {\small discretization error in the $L^2$-norm for finite element *} \\
+    {\tt LInfErr\_*} & {\small discretization error in the $L^{\infty}$-norm for finite element *} \\
+    {\tt HCurlSErr\_*} & {\small discretization error in the $S^1$-norm for (vector-valued) finite elements *}
+  \end{tabular}
+  \caption{File names for the computation of discretization errors}
+  \label{tab:err_norms}
+\end{table}
+
+ As already mentioned, the main input arguments are of course the exact and the finite element solution. They must be provided as stated in table \ref{tab:err_sol}. Here {\tt u} corresponds to the vector $\mu$ on p. \pageref{chap:local_comp}.
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+	{\tt u} & {\small values of the finite element solution (in fact its coefficient vector) at the vertices of the mesh} \\
+	{\tt FHandle} & {\small function handle to the exact solution} \\
+	{\tt FParam} & {\small variable length argument list for {\tt FHandle}}
+  \end{tabular}
+  \caption{Exact and FE solution}
+  \label{tab:err_sol}
+\end{table} 
+
+ The other input arguments are the {\tt Mesh} and a quadrature rule\index{quadrature rules} \ttindex{QuadRule} (see section \ref{chap:quad_rule}, p. \pageref{chap:quad_rule}ff) with a sufficient order. \\
+
+ The struct \ttindex{Mesh} must at least contain the fields specified in table \ref{tab:err_mesh1}. In case the shape functions are connected to edges also the ones in table \ref{tab:err_mesh2} are necessary. \\
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+    \ttindex{Coordinates} & {\small $M$-by-$2$ matrix specifying all vertex coordinates} \\
+    \ttindex{Elements} & {\small $N$-by-$3$ or $N$-by-$4$ matrix connecting vertices into elements}
+  \end{tabular}
+  \caption{Basic mesh data structure (2D)}
+  \label{tab:err_mesh1}
+\end{table}
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+    \ttindex{Edges} & {\small $P$-by-$2$ matrix specifying all edges of the mesh} \\
+    \ttindex{Vert2Edge} & {\small $M$-by-$M$ sparse matrix which specifies whether the two vertices {\tt i} and {\tt j} are connected by an edge with number {\tt Vert2Edge(i,j)}}
+  \end{tabular}
+  \caption{Additional mesh data structure (2D)}
+  \label{tab:err_mesh2}
+\end{table}
+
+ The {\tt L2Err}-functions are e.g. called by \\
+
+\noindent {\tt >> err = \ttindex{L2Err\_LFE}(Mesh,u,QuadRule,FHandle,FParam);} \\
+
+ where, as usual, {\tt FParam} handles the variable length argument list to the exact solution {\tt FHandle}. The output {\tt err} is the error in the $L^2$-norm summed up over all elements. \\
+
+ The MATLAB-code follows the line:
+\begin{enumerate}
+	\item pre-computation of the shape functions\index{shape functions} {\tt shap\_*} (stored in {\tt /Lib/Element}) at the given quadrature points {\tt QuadRule.x}, e.g. \\
+
+\noindent {\tt >> N = shap\_LFE(QuadRule.x);}
+
+	\item for each element extraction of the vertices and computation of the transformation map to the standard reference element
+	\item evaluation of the exact and finite element solutions {\tt u\_EX} resp. {\tt u\_FE} on that element {\tt i} (e.g. in the case of triangular finite elements) by \\
+
+\noindent {\tt >> u\_EX = FHandle(x,FParam);} \index{u\_EX@{\tt u\_EX}|textit} \\
+\noindent {\tt >> u\_FE = u(Mesh.Elements(i,1))*N(:,1)+ ... \index{u\_FE@{\tt u\_FE}|textit} \\
+u(Mesh.Elements(i,2))*N(:,2)+u(Mesh.Elements(i,3))*N(:,3);} \\
+
+where {\tt x} are the transformed quadrature points.
+	\item computation of the error using the respective norm and {\tt QuadRule}
+	\item summation of all element errors
+\end{enumerate}
+
+ For the Sobolev-(semi-)norms it's also necessary to compute the gradients \ttindex{grad\_u\_EX} resp \ttindex{grad\_u\_FE} of the solutions. See section \ref{sect:h1_err} for further details. \\
+
+ All norms should be contained in any functional analysis book.
+
+% e.g. lecture notes http://www.mat.univie.ac.at/~has/funktional/script2.pdf

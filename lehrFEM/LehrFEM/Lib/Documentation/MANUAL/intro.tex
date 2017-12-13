@@ -1,0 +1,29 @@
+% Introduction
+
+\chapter*{Introduction}
+\label{sect:Intro}
+
+\LIBNAME is a 2D finite element toolbox written in the programming language \MATLAB for educational
+purpose. \\
+
+\bigskip
+
+ The chapter 'Mesh Generation' was written by Patrick Meury in 2005. The rest of the basic framework was summerized in the chapters 'Local Shape Functions and its Gradients', 'Numerical Integration', 'Local Computations', 'Assembly', 'Boundary Conditions', 'Plotting the Solution' and 'Discretization Errors' by Annegret Burtscher in 2008.
+
+ Eivind Fonn contributed the 'Finite Volume Code for Solving Convection/Diffusion Equations' in 2007. \\
+ 
+ Reorganization and extension by the chapter 'Examples' by Christoph Wiesmeyr in 2009.
+
+ The chapters are organized in a way that they contain files of the same type and same folder of the LehrFEM. For an overview of both, the folder structure of the \LIBNAME and the manual, see p. \pageref{chap:overview}.
+
+ Generally on the beginning of each chapter and section there is a summary of the task of the functions involved, as well as the input, output, call and main steps of the implementation. In the chapters explaining the implementation the focus is on the easiest finite elements, which involves linear or quadratic basis functions. However there is always a small explanation of the more evolved methods which can be ommited on the first reading. For further explanation it is recommeded to read the explanations in the chapter 'Examples', where more complicated FEM are explained in more detail. \\
+
+ Readers are expected to have a background in linear algebra, calculus and the numerical analysis of PDEs. The theoretical concepts behind the implementation are more or less omitted, but may be found in the lecture notes \cite{HS07} and books about the FEM. \\
+
+ This manual may be found in the folder {\tt /Lib/Documentation/MANUAL}. The keyfile is {\tt manual.tex}.
+
+\bigskip 
+
+ \MATLAB formulations are written in the {\tt typewriter font}, as well as the {\tt .m}-files (without {\tt .m} in the end) and variables that appear in the functions. Folders start with an {\tt /}, {\tt *} is used as a wildcard character -- mostly for a certain type of finite elements, e.g. in {\tt shap\_*} the {\tt *} may be replaced by {\tt LFE}. \\
+
+ \textbf{Note: }The purpose of the \ttitindex{startup}-function is to add the various directories to the search path. It must be run each time before working with the \LIBNAME functions.

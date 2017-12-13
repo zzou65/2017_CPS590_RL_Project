@@ -1,0 +1,626 @@
+\indexentry{startup@{\tt  startup}|textit}{8}
+\indexentry{mesh|(hyperpage}{11}
+\indexentry{mesh!data structure|hyperpage}{11}
+\indexentry{mesh@{\tt Mesh}|textit}{11}
+\indexentry{Coordinates@{\tt  Coordinates}|textit}{11}
+\indexentry{Elements@{\tt  Elements}|textit}{11}
+\indexentry{add\_Edges@{\tt  add\_Edges}|textit}{11}
+\indexentry{Edges@{\tt  Edges}|textit}{12}
+\indexentry{Vert2Edge@{\tt  Vert2Edge}|textit}{12}
+\indexentry{get\_BdEdges@{\tt  get\_BdEdges}|textit}{12}
+\indexentry{add\_Edge2Elem@{\tt  add\_Edge2Elem}|textit}{12}
+\indexentry{Edge2Elem@{\tt  Edge2Elem}|textit}{12}
+\indexentry{EdgeLoc@{\tt  EdgeLoc}|textit}{12}
+\indexentry{add\_Patches@{\tt  add\_Patches}|textit}{13}
+\indexentry{AdjElements@{\tt  AdjElements}|textit}{13}
+\indexentry{nAdjElements@{\tt  nAdjElements}|textit}{13}
+\indexentry{add\_DGData@{\tt  add\_DGData}|textit}{13}
+\indexentry{mesh!generation|hyperpage}{13}
+\indexentry{init\_Mesh@{\tt init\_Mesh}|(hyperpage}{13}
+\indexentry{dist\_circ@{\tt  dist\_circ}|textit}{13}
+\indexentry{dist\_rect@{\tt  dist\_rect}|textit}{13}
+\indexentry{dist\_union@{\tt  dist\_union}|textit}{13}
+\indexentry{dist\_isect@{\tt  dist\_isect}|textit}{13}
+\indexentry{dist\_diff@{\tt  dist\_diff}|textit}{13}
+\indexentry{init\_Mesh@{\tt init\_Mesh}|)hyperpage}{14}
+\indexentry{mesh!loading|hyperpage}{14}
+\indexentry{mesh!saving|hyperpage}{14}
+\indexentry{load\_Mesh@{\tt  load\_Mesh}|textit}{15}
+\indexentry{save\_Mesh@{\tt  save\_Mesh}|textit}{15}
+\indexentry{plot!mesh|(hyperpage}{15}
+\indexentry{mesh!plotting|(hyperpage}{15}
+\indexentry{plot\_Mesh@{\tt  plot\_Mesh}|hyperpage}{15}
+\indexentry{plot\_Qual@{\tt  plot\_Qual}|hyperpage}{15}
+\indexentry{plot\_USR@{\tt  plot\_USR}|hyperpage}{15}
+\indexentry{plot\_DomBd@{\tt  plot\_DomBd}|hyperpage}{15}
+\indexentry{plot\_Mesh@{\tt  plot\_Mesh}|textit}{15}
+\indexentry{add\_VertLabels@{\tt  add\_VertLabels}|textit}{15}
+\indexentry{add\_ElemLabels@{\tt  add\_ElemLabels}|textit}{15}
+\indexentry{add\_EdgeLabels@{\tt  add\_EdgeLabels}|textit}{15}
+\indexentry{plot!element quality|hyperpage}{16}
+\indexentry{plot\_Qual@{\tt  plot\_Qual}|textit}{16}
+\indexentry{plot!university similarity region|hyperpage}{16}
+\indexentry{plot\_USR@{\tt  plot\_USR}|textit}{16}
+\indexentry{mesh!plotting|)hyperpage}{16}
+\indexentry{plot!mesh|)hyperpage}{16}
+\indexentry{plot!mesh boundary|(hyperpage}{16}
+\indexentry{plot\_DomBd@{\tt  plot\_DomBd}|textit}{16}
+\indexentry{mesh!refinements|hyperpage}{17}
+\indexentry{BdFlags@{\tt  BdFlags}|textit}{18}
+\indexentry{refine\_REG@{\tt  refine\_REG}|textit}{18}
+\indexentry{add\_MLevel@{\tt  add\_MLevel}|textit}{18}
+\indexentry{init\_LEB@{\tt init\_LEB}|hyperpage}{20}
+\indexentry{refine\_LEB@{\tt refine\_LEB}|hyperpage}{20}
+\indexentry{mesh!postprocessing|hyperpage}{20}
+\indexentry{shift@{\tt shift}|hyperpage}{21}
+\indexentry{rotate@{\tt rotate}|hyperpage}{21}
+\indexentry{stretch@{\tt stretch}|hyperpage}{21}
+\indexentry{smooth@{\tt smooth}|hyperpage}{21}
+\indexentry{mesh|)hyperpage}{21}
+\indexentry{shape functions|(hyperpage}{23}
+\indexentry{basis functions|see{shape functions}}{23}
+\indexentry{gradients of shape functions|see{shape functions}}{23}
+\indexentry{shape functions!argument list|hyperpage}{23}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{24}
+\indexentry{grad\_shap\_LFE@{\tt  grad\_shap\_LFE}|hyperpage}{24}
+\indexentry{shape functions!output|hyperpage}{24}
+\indexentry{shape functions!plot|(hyperpage}{24}
+\indexentry{plot!shape functions|(hyperpage}{24}
+\indexentry{plot\_Shap@{\tt  plot\_Shap}|textit}{24}
+\indexentry{main\_Shap\_LFE@{\tt  main\_Shap\_LFE}|hyperpage}{24}
+\indexentry{plot\_Shap\_LFE@{\tt  plot\_Shap\_LFE}|textit}{24}
+\indexentry{linear finite elements!shape functions|hyperpage}{24}
+\indexentry{plot\_Shap\_QFE@{\tt  plot\_Shap\_QFE}|textit}{24}
+\indexentry{quadratic finite elements!shape functions|hyperpage}{24}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{24}
+\indexentry{shap\_QFE@{\tt  shap\_QFE}|hyperpage}{24}
+\indexentry{affine\_map@{\tt  affine\_map}|textit}{25}
+\indexentry{shape functions!plot pyramids|hyperpage}{25}
+\indexentry{plot\_Pyramid\_LFE@{\tt  plot\_Pyramid\_LFE}|hyperpage}{25}
+\indexentry{plot\_Pyramid\_LFE@{\tt  plot\_Pyramid\_LFE}|hyperpage}{25}
+\indexentry{plot\_Pyramid\_QFE@{\tt  plot\_Pyramid\_QFE}|hyperpage}{25}
+\indexentry{plot!shape functions|)hyperpage}{25}
+\indexentry{shape functions!plot|)hyperpage}{25}
+\indexentry{shape functions!Lagrangian finite elements!of order 1!conforming|hyperpage}{26}
+\indexentry{linear finite elements!shape functions|(hyperpage}{26}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|textit}{26}
+\indexentry{grad\_shap\_LFE@{\tt  grad\_shap\_LFE}|textit}{26}
+\indexentry{main\_Shap\_LFE@{\tt  main\_Shap\_LFE}|textit}{26}
+\indexentry{plot\_Shap\_LFE@{\tt  plot\_Shap\_LFE}|hyperpage}{26}
+\indexentry{plot\_Pyramid\_LFE@{\tt  plot\_Pyramid\_LFE}|textit}{26}
+\indexentry{shape functions!Lagrangian finite elements!of order 1!vector-valued|hyperpage}{26}
+\indexentry{linear vector-valued finite elements!shape functions|hyperpage}{26}
+\indexentry{shap\_LFE2@{\tt  shap\_LFE2}|textit}{26}
+\indexentry{plot\_Shap\_LFE2@{\tt  plot\_Shap\_LFE2}|hyperpage}{26}
+\indexentry{quadratic finite elements!shape functions|hyperpage}{26}
+\indexentry{shap\_QFE@{\tt  shap\_QFE}|textit}{26}
+\indexentry{grad\_shap\_QFE@{\tt  grad\_shap\_QFE}|textit}{26}
+\indexentry{main\_Shap\_QFE@{\tt  main\_Shap\_QFE}|textit}{26}
+\indexentry{plog\_Shap\_QFE@{\tt  plog\_Shap\_QFE}|hyperpage}{26}
+\indexentry{plot\_Pyramid\_QFE@{\tt  plot\_Pyramid\_QFE}|textit}{26}
+\indexentry{shap\_EP2@{\tt  shap\_EP2}|textit}{26}
+\indexentry{grad\_shap\_EP2@{\tt  grad\_shap\_EP2}|textit}{26}
+\indexentry{shap\_DGLFE\_1D@{\tt  shap\_DGLFE\_1D}|textit}{27}
+\indexentry{grad\_shap\_DGLFE\_1D@{\tt  grad\_shap\_DGLFE\_1D}|textit}{27}
+\indexentry{shap\_DGLFE@{\tt  shap\_DGLFE}|textit}{27}
+\indexentry{grad\_shap\_DGLFE@{\tt  grad\_shap\_DGLFE}|textit}{27}
+\indexentry{shap\_P1\_1D@{\tt  shap\_P1\_1D}|textit}{27}
+\indexentry{grad\_shap\_P1\_1D@{\tt  grad\_shap\_P1\_1D}|textit}{27}
+\indexentry{linear finite elements!shape functions|)hyperpage}{27}
+\indexentry{bilinear finite elements!shape functions|hyperpage}{27}
+\indexentry{shap\_BFE@{\tt  shap\_BFE}|textit}{27}
+\indexentry{grad\_shap\_BFE@{\tt  grad\_shap\_BFE}|textit}{27}
+\indexentry{main\_Shap\_BFE@{\tt  main\_Shap\_BFE}|textit}{27}
+\indexentry{Crouzeix-Raviart finite elements!shape functions|hyperpage}{27}
+\indexentry{shap\_CR@{\tt  shap\_CR}|textit}{27}
+\indexentry{grad\_shap\_CR@{\tt  grad\_shap\_CR}|textit}{27}
+\indexentry{main\_Shap\_CR@{\tt  main\_Shap\_CR}|textit}{27}
+\indexentry{shap\_DGCR@{\tt  shap\_DGCR}|textit}{27}
+\indexentry{grad\_shap\_DGCR@{\tt  grad\_shap\_DGCR}|textit}{27}
+\indexentry{MINI element!shape functions|hyperpage}{27}
+\indexentry{shap\_MINI@{\tt  shap\_MINI}|textit}{27}
+\indexentry{grad\_shap\_MINI@{\tt  grad\_shap\_MINI}|textit}{27}
+\indexentry{Whitney 1-forms!shape functions|hyperpage}{28}
+\indexentry{edge elements|see{Whitney 1-forms}}{28}
+\indexentry{shap\_W1F@{\tt  shap\_W1F}|textit}{28}
+\indexentry{plot\_Shap\_W1F@{\tt  plot\_Shap\_W1F}|hyperpage}{28}
+\indexentry{shap\_Leg\_1D@{\tt  shap\_Leg\_1D}|textit}{28}
+\indexentry{grad\_shap\_Leg\_1D@{\tt  grad\_shap\_Leg\_1D}|textit}{28}
+\indexentry{hpFEM@$hp$FEM!shape functions|hyperpage}{28}
+\indexentry{shap\_hp@{\tt  shap\_hp}|textit}{28}
+\indexentry{vshap@{\tt  vshap}|textit}{28}
+\indexentry{eshap@{\tt  eshap}|textit}{28}
+\indexentry{cshap@{\tt  cshap}|textit}{28}
+\indexentry{main\_Shap\_hp@{\tt  main\_Shap\_hp}|textit}{29}
+\indexentry{shape functions|)hyperpage}{29}
+\indexentry{quadrature rules|(hyperpage}{31}
+\indexentry{integration!numerical|see{quadrature rules}}{31}
+\indexentry{quadrature rules!data structure|hyperpage}{31}
+\indexentry{QuadRule@{\tt  QuadRule}|textit}{31}
+\indexentry{quadrature rules!data structure|hyperpage}{31}
+\indexentry{quadrature rules!1-dimensional|textit}{32}
+\indexentry{quadrature rules!1-dimensional!Gauss-Legendre|textit}{32}
+\indexentry{Gauss-Legendre quadrature rule|hyperpage}{32}
+\indexentry{gauleg@{\tt  gauleg}|textit}{32}
+\indexentry{quadrature rules!1-dimensional!Gauss-Legendre-Lobatto|textit}{32}
+\indexentry{Gauss-Legendre-Lobatto quadrature rule|hyperpage}{32}
+\indexentry{gaulob@{\tt  gaulob}|textit}{32}
+\indexentry{quadrature rules!2-dimensional|textit}{32}
+\indexentry{quadrature rules!2-dimensional!transformed|textit}{32}
+\indexentry{tensor product|hyperpage}{32}
+\indexentry{TProd@{\tt  TProd}|textit}{32}
+\indexentry{Duffy transformation|hyperpage}{32}
+\indexentry{Duffy@{\tt  Duffy}|textit}{32}
+\indexentry{quadrature rules!2-dimensional!Gaussian|textit}{33}
+\indexentry{Gaussian quadrature rule, 2D|hyperpage}{33}
+\indexentry{P1O2@{\tt  P1O2}|textit}{33}
+\indexentry{P3O2@{\tt  P3O2}|textit}{33}
+\indexentry{P3O3@{\tt  P3O3}|textit}{33}
+\indexentry{P4O3@{\tt  P4O3}|textit}{33}
+\indexentry{P6O4@{\tt  P6O4}|textit}{33}
+\indexentry{P7O4@{\tt  P7O4}|textit}{33}
+\indexentry{P7O6@{\tt  P7O6}|textit}{33}
+\indexentry{P10O4@{\tt  P10O4}|textit}{33}
+\indexentry{P10O5@{\tt  P10O5}|textit}{33}
+\indexentry{quadrature rules!2-dimensional!Newton-Cotes|textit}{33}
+\indexentry{Newton-Cotes quadrature rule|hyperpage}{33}
+\indexentry{ncc\_triangle\_rule@{\tt  ncc\_triangle\_rule}|textit}{33}
+\indexentry{NCC@{\tt  NCC}|textit}{33}
+\indexentry{quadrature rules|)hyperpage}{33}
+\indexentry{A@{\tt  A}|hyperpage}{35}
+\indexentry{stiffness matrix|hyperpage}{35}
+\indexentry{L@{\tt  L}|hyperpage}{35}
+\indexentry{load vector|hyperpage}{35}
+\indexentry{solution|hyperpage}{35}
+\indexentry{A@{\tt  A}|hyperpage}{35}
+\indexentry{L@{\tt  L}|hyperpage}{35}
+\indexentry{element stiffness matrix|(hyperpage}{36}
+\indexentry{element stiffness matrix!input|hyperpage}{36}
+\indexentry{Vertices@{\tt  Vertices}|hyperpage}{36}
+\indexentry{ElemInfo@{\tt  ElemInfo}|hyperpage}{36}
+\indexentry{QuadRule@{\tt  QuadRule}|hyperpage}{36}
+\indexentry{element stiffness matrix!output|hyperpage}{36}
+\indexentry{Aloc@{\tt  Aloc}|textit}{36}
+\indexentry{assembling!global matrix|hyperpage}{36}
+\indexentry{element stiffness matrix!examples|hyperpage}{37}
+\indexentry{Laplacian!element stiffness matrix|hyperpage}{37}
+\indexentry{STIMA\_Lapl\_CR@{\tt STIMA\_Lapl\_CR}|hyperpage}{37}
+\indexentry{Heat equation!element stiffness matrix!bilinear finite elements|hyperpage}{38}
+\indexentry{STIMA\_Heat\_BFE@{\tt STIMA\_Heat\_BFE}|hyperpage}{38}
+\indexentry{Helmholtz equation!element stiffness matrix|hyperpage}{38}
+\indexentry{STIMA\_Helm\_Neu\_Bnd\_PWDG@{\tt STIMA\_Helm\_Neu\_Bnd\_PWDG}|hyperpage}{38}
+\indexentry{Element@{\tt  Element}|hyperpage}{38}
+\indexentry{ElemData@{\tt  ElemData}|hyperpage}{38}
+\indexentry{Vertices@{\tt  Vertices}|hyperpage}{38}
+\indexentry{EdgeLoc@{\tt  EdgeLoc}|hyperpage}{38}
+\indexentry{Match@{\tt  Match}|hyperpage}{38}
+\indexentry{Edge@{\tt  Edge}|hyperpage}{38}
+\indexentry{Normal@{\tt  Normal}|hyperpage}{38}
+\indexentry{element stiffness matrix|)hyperpage}{39}
+\indexentry{EDofs@{\tt EDofs}|hyperpage}{40}
+\indexentry{EDir@{\tt EDir}|hyperpage}{40}
+\indexentry{CDofs@{\tt CDofs}|hyperpage}{40}
+\indexentry{element mass matrix|(hyperpage}{40}
+\indexentry{Vertices@{\tt  Vertices}|hyperpage}{40}
+\indexentry{QuadRule@{\tt  QuadRule}|hyperpage}{40}
+\indexentry{shape functions|hyperpage}{40}
+\indexentry{Mloc@{\tt  Mloc}|textit}{40}
+\indexentry{Aloc@{\tt  Aloc}|hyperpage}{40}
+\indexentry{assembling!global matrix|hyperpage}{40}
+\indexentry{mass matrix|hyperpage}{40}
+\indexentry{M@{\tt  M}|hyperpage}{40}
+\indexentry{constant finite elements!element mass matrix|hyperpage}{40}
+\indexentry{MASS\_P0\_1D@{\tt  MASS\_P0\_1D}|textit}{40}
+\indexentry{MASS\_P0@{\tt  MASS\_P0}|textit}{40}
+\indexentry{MASS\_Weight\_P0\_1D@{\tt  MASS\_Weight\_P0\_1D}|textit}{40}
+\indexentry{MASS\_Weight\_P0@{\tt  MASS\_Weight\_P0}|textit}{40}
+\indexentry{linear finite elements!element mass matrix|hyperpage}{40}
+\indexentry{MASS\_P1\_1D@{\tt  MASS\_P1\_1D}|textit}{40}
+\indexentry{MASS\_Weight\_P1\_1D@{\tt  MASS\_Weight\_P1\_1D}|textit}{40}
+\indexentry{shap\_P1\_1D@{\tt  shap\_P1\_1D}|hyperpage}{40}
+\indexentry{MASS\_LFE@{\tt  MASS\_LFE}|textit}{41}
+\indexentry{MASS\_LFE2@{\tt  MASS\_LFE2}|hyperpage}{41}
+\indexentry{MASS\_Weight\_LFE@{\tt  MASS\_Weight\_LFE}|textit}{41}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{41}
+\indexentry{bilinear finite elements!element mass matrix|hyperpage}{41}
+\indexentry{MASS\_BFE@{\tt  MASS\_BFE}|textit}{41}
+\indexentry{shap\_BFE@{\tt  shap\_BFE}|hyperpage}{41}
+\indexentry{grad\_shap\_BFE@{\tt  grad\_shap\_BFE}|hyperpage}{41}
+\indexentry{Crouzeix-Raviart finite elements!element mass matrix|hyperpage}{41}
+\indexentry{MASS\_CR@{\tt  MASS\_CR}|textit}{41}
+\indexentry{MASS\_Vol\_DGCR@{\tt  MASS\_Vol\_DGCR}|textit}{41}
+\indexentry{quadratic finite elements!element mass matrix|hyperpage}{41}
+\indexentry{MASS\_QFE@{\tt  MASS\_QFE}|textit}{41}
+\indexentry{Whitney 1-forms!element mass matrix|hyperpage}{41}
+\indexentry{MASS\_W1F@{\tt  MASS\_W1F}|textit}{41}
+\indexentry{hpFEM@$hp$FEM!element mass matrix|hyperpage}{42}
+\indexentry{MASS\_hpDG\_1D@{\tt  MASS\_hpDG\_1D}|textit}{42}
+\indexentry{MASS\_Vol\_hpDG\_1D@{\tt  MASS\_Vol\_hpDG\_1D}|textit}{42}
+\indexentry{MASS\_hp@{\tt  MASS\_hp}|textit}{42}
+\indexentry{main\_hp@{\tt  main\_hp}|hyperpage}{42}
+\indexentry{assemMat\_hp@{\tt  assemMat\_hp}|hyperpage}{42}
+\indexentry{mixed finite elements!element mass matrix|hyperpage}{42}
+\indexentry{MASS\_P1P0@{\tt  MASS\_P1P0}|textit}{42}
+\indexentry{MASS\_Weight\_P1P0@{\tt  MASS\_Weight\_P1P0}|textit}{42}
+\indexentry{element mass matrix|)hyperpage}{42}
+\indexentry{element load vector|(hyperpage}{42}
+\indexentry{assembling!load vector|hyperpage}{43}
+\indexentry{element load vector!boundary contributions|(hyperpage}{43}
+\indexentry{Edge@{\tt  Edge}|hyperpage}{43}
+\indexentry{Normal@{\tt  Normal}|hyperpage}{43}
+\indexentry{BdFlag@{\tt  BdFlag}|hyperpage}{43}
+\indexentry{Element@{\tt  Element}|hyperpage}{43}
+\indexentry{ElemData@{\tt  ElemData}|hyperpage}{43}
+\indexentry{Vertices@{\tt  Vertices}|hyperpage}{43}
+\indexentry{EdgeLoc@{\tt  EdgeLoc}|hyperpage}{43}
+\indexentry{Match@{\tt  Match}|hyperpage}{43}
+\indexentry{quadrature rules|hyperpage}{43}
+\indexentry{QuadRule@{\tt  QuadRule}|hyperpage}{43}
+\indexentry{LOAD\_Bnd\_DGLFE@{\tt  LOAD\_Bnd\_DGLFE}|textit}{44}
+\indexentry{LOAD\_Dir\_Bnd\_PWDG@{\tt  LOAD\_Dir\_Bnd\_PWDG}|textit}{44}
+\indexentry{LOAD\_Lapl\_Bnd\_PDG@{\tt  LOAD\_Lapl\_Bnd\_PDG}|textit}{44}
+\indexentry{element load vector!boundary contributions|)hyperpage}{44}
+\indexentry{element load vector!volume contributions|(hyperpage}{44}
+\indexentry{nDof@{\tt  nDof}|textit}{45}
+\indexentry{Dir@{\tt  Dir}|textit}{45}
+\indexentry{ElemData@{\tt  ElemData}|textit}{45}
+\indexentry{LOAD\_EnergyProj\_Vol\_PWDG@{\tt  LOAD\_EnergyProj\_Vol\_PWDG}|textit}{45}
+\indexentry{shap\_BFE@{\tt  shap\_BFE}|hyperpage}{45}
+\indexentry{grad\_shap\_BFE@{\tt  grad\_shap\_BFE}|hyperpage}{45}
+\indexentry{P3O3@{\tt  P3O3}|hyperpage}{45}
+\indexentry{P7O6@{\tt  P7O6}|hyperpage}{45}
+\indexentry{LOAD\_Vol\_DGLFE@{\tt  LOAD\_Vol\_DGLFE}|textit}{45}
+\indexentry{shap\_DGLFE@{\tt  shap\_DGLFE}|hyperpage}{45}
+\indexentry{element load vector!volume contributions|)hyperpage}{45}
+\indexentry{element load vector|)hyperpage}{45}
+\indexentry{assembling!global matrix|(hyperpage}{47}
+\indexentry{Aloc@{\tt  Aloc}|hyperpage}{47}
+\indexentry{ElemFlag@{\tt  ElemFlag}|hyperpage}{48}
+\indexentry{assembling!mesh data structure|hyperpage}{48}
+\indexentry{assemMat\_LFE@{\tt  assemMat\_LFE}|hyperpage}{49}
+\indexentry{set\_Rows@{\tt  set\_Rows}|hyperpage}{49}
+\indexentry{set\_Cols@{\tt  set\_Cols}|hyperpage}{49}
+\indexentry{A@{\tt  A}|hyperpage}{49}
+\indexentry{constant finite elements!assembling of the global matrix|hyperpage}{49}
+\indexentry{assemMat\_P0\_1D@{\tt  assemMat\_P0\_1D}|textit}{49}
+\indexentry{assemMat\_P0@{\tt  assemMat\_P0}|textit}{49}
+\indexentry{linear finite elements!assembling of the global matrix|hyperpage}{50}
+\indexentry{assemMat\_P1\_1D@{\tt  assemMat\_P1\_1D}|textit}{50}
+\indexentry{assemMat\_LFE@{\tt  assemMat\_LFE}|textit}{50}
+\indexentry{linear vector-valued finite elements!assembling of the global matrix|hyperpage}{50}
+\indexentry{assemMat\_LFE2@{\tt  assemMat\_LFE2}|textit}{50}
+\indexentry{bilinear finite elements!assembling of the global matrix|hyperpage}{50}
+\indexentry{assemMat\_BFE@{\tt  assemMat\_BFE}|textit}{50}
+\indexentry{Crouzeix-Raviart finite elements!assembling of the global matrix|hyperpage}{50}
+\indexentry{assemMat\_CR@{\tt  assemMat\_CR}|textit}{50}
+\indexentry{quadratic finite elements!assembling of the global matrix|hyperpage}{50}
+\indexentry{assemMat\_QFE@{\tt  assemMat\_QFE}|textit}{50}
+\indexentry{Whitney 1-forms!assembling of the global matrix|hyperpage}{50}
+\indexentry{assemMat\_W1F@{\tt  assemMat\_W1F}|textit}{50}
+\indexentry{assemMat\_WReg\_W1F@{\tt  assemMat\_WReg\_W1F}|textit}{51}
+\indexentry{P7O6@{\tt  P7O6}|hyperpage}{51}
+\indexentry{hpFEM@$hp$FEM!assembling of the global matrix|hyperpage}{51}
+\indexentry{assemMat\_hp@{\tt  assemMat\_hp}|textit}{51}
+\indexentry{Elem2Dof@{\tt  Elem2Dof}|textit}{51}
+\indexentry{build\_DofMaps@{\tt  build\_DofMaps}|hyperpage}{51}
+\indexentry{mixed finite elements!assembling of the global matrix|hyperpage}{52}
+\indexentry{assemMat\_P1P0\_1D@{\tt  assemMat\_P1P0\_1D}|textit}{52}
+\indexentry{assemMat\_P1P0@{\tt  assemMat\_P1P0}|textit}{52}
+\indexentry{assembling!global matrix|)hyperpage}{52}
+\indexentry{assembling!load vector|(hyperpage}{52}
+\indexentry{quadrature rules|hyperpage}{52}
+\indexentry{L@{\tt  L}|hyperpage}{52}
+\indexentry{assemLoad\_LFE@{\tt  assemLoad\_LFE}|hyperpage}{52}
+\indexentry{shape functions|hyperpage}{54}
+\indexentry{constant finite elements!assembling of the load vector|hyperpage}{54}
+\indexentry{assemLoad\_P0@{\tt  assemLoad\_P0}|textit}{54}
+\indexentry{linear finite elements!assembling of the load vector|hyperpage}{54}
+\indexentry{assemLoad\_P1\_1D@{\tt  assemLoad\_P1\_1D}|textit}{54}
+\indexentry{shap\_P1\_1D@{\tt  shap\_P1\_1D}|hyperpage}{54}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{54}
+\indexentry{assemLoad\_LFE@{\tt  assemLoad\_LFE}|textit}{54}
+\indexentry{linear vector-valued finite elements!assembling of the load vector|hyperpage}{54}
+\indexentry{assemLoad\_LFE2@{\tt  assemLoad\_LFE2}|textit}{54}
+\indexentry{shap\_LFE2@{\tt  shap\_LFE2}|hyperpage}{54}
+\indexentry{bilinear finite elements!assembling of the load vector|hyperpage}{54}
+\indexentry{assemLoad\_BFE@{\tt  assemLoad\_BFE}|textit}{54}
+\indexentry{shap\_BFE@{\tt  shap\_BFE}|hyperpage}{54}
+\indexentry{grad\_shap\_BFE@{\tt  grad\_shap\_BFE}|hyperpage}{54}
+\indexentry{Crouzeix-Raviart finite elements!assembling of the load vector|hyperpage}{55}
+\indexentry{assemLoad\_CR@{\tt  assemLoad\_CR}|textit}{55}
+\indexentry{shap\_CR@{\tt  shap\_CR}|hyperpage}{55}
+\indexentry{quadratic finite elements!assembling of the load vector|hyperpage}{55}
+\indexentry{assemLoad\_QFE@{\tt  assemLoad\_QFE}|textit}{55}
+\indexentry{shap\_QFE@{\tt  shap\_QFE}|hyperpage}{55}
+\indexentry{Whitney 1-forms!assembling of the load vector|hyperpage}{55}
+\indexentry{assemLoad\_W1F@{\tt  assemLoad\_W1F}|textit}{55}
+\indexentry{shap\_W1F@{\tt  shap\_W1F}|hyperpage}{55}
+\indexentry{hpFEM@$hp$FEM!assembling of the load vector|hyperpage}{55}
+\indexentry{assemLoad\_hpDG\_1D@{\tt  assemLoad\_hpDG\_1D}|textit}{55}
+\indexentry{assemLoad\_hp@{\tt assemLoad\_hp}|hyperpage}{56}
+\indexentry{Elem2Dof@{\tt  Elem2Dof}|hyperpage}{56}
+\indexentry{assembling!load vector|)hyperpage}{56}
+\indexentry{boundary conditions|(hyperpage}{57}
+\indexentry{boundary conditions!Dirichlet boundary conditions|(hyperpage}{57}
+\indexentry{boundary conditions!Dirichlet boundary conditions!mesh data|hyperpage}{58}
+\indexentry{FreeDofs@{\tt  FreeDofs}|textit}{59}
+\indexentry{linear finite elements!Dirichlet boundary conditions|hyperpage}{59}
+\indexentry{assemDir\_P1\_1D@{\tt  assemDir\_P1\_1D}|textit}{59}
+\indexentry{linear vector-valued finite elements!Dirichlet boundary conditions|hyperpage}{59}
+\indexentry{assemDir\_LFE@{\tt  assemDir\_LFE}|textit}{59}
+\indexentry{assemDir\_LFE2@{\tt  assemDir\_LFE2}|textit}{59}
+\indexentry{bilinear finite elements!Dirichlet boundary conditions|hyperpage}{60}
+\indexentry{assemDir\_BFE@{\tt  assemDir\_BFE}|textit}{60}
+\indexentry{Crouzeix-Raviart finite elements!Dirichlet boundary conditions|hyperpage}{60}
+\indexentry{assemDir\_CR@{\tt  assemDir\_CR}|textit}{60}
+\indexentry{quadratic finite elements!Dirichlet boundary conditions|hyperpage}{60}
+\indexentry{assemDir\_QFE@{\tt  assemDir\_QFE}|textit}{60}
+\indexentry{Whitney 1-forms!Dirichlet boundary conditions|hyperpage}{60}
+\indexentry{quadrature rules|hyperpage}{60}
+\indexentry{gauleg@{\tt  gauleg}|hyperpage}{60}
+\indexentry{assemDir\_W1F@{\tt  assemDir\_W1F}|textit}{60}
+\indexentry{hpFEM@$hp$FEM!Dirichlet boundary conditions|hyperpage}{60}
+\indexentry{assemDir\_hpDG\_1D@{\tt  assemDir\_hpDG\_1D}|textit}{60}
+\indexentry{Elem2Dof@{\tt  Elem2Dof}|hyperpage}{60}
+\indexentry{quadrature rules|hyperpage}{60}
+\indexentry{Elem2Dof@{\tt  Elem2Dof}|hyperpage}{60}
+\indexentry{Edge2Elem@{\tt  Edge2Elem}|hyperpage}{61}
+\indexentry{EdgeLoc@{\tt  EdgeLoc}|hyperpage}{61}
+\indexentry{boundary conditions!Dirichlet boundary conditions!mesh data|hyperpage}{61}
+\indexentry{build\_DofMaps@{\tt  build\_DofMaps}|hyperpage}{61}
+\indexentry{assemDir\_hp@{\tt  assemDir\_hp}|textit}{61}
+\indexentry{boundary conditions!Dirichlet boundary conditions|)hyperpage}{61}
+\indexentry{boundary conditions!Neumann boundary conditions|(hyperpage}{61}
+\indexentry{EdgeLoc@{\tt  EdgeLoc}|hyperpage}{61}
+\indexentry{Edge2Elem@{\tt  Edge2Elem}|hyperpage}{61}
+\indexentry{quadrature rules|hyperpage}{61}
+\indexentry{boundary conditions!Neumann boundary conditions!output|hyperpage}{63}
+\indexentry{linear finite elements!Neumann boundary conditions|hyperpage}{63}
+\indexentry{assemNeu\_P1\_1D@{\tt  assemNeu\_P1\_1D}|textit}{63}
+\indexentry{assemNeu\_LFE@{\tt  assemNeu\_LFE}|textit}{64}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{64}
+\indexentry{bilinear finite elements!Neumann boundary conditions|hyperpage}{64}
+\indexentry{shap\_BFE@{\tt  shap\_BFE}|hyperpage}{64}
+\indexentry{assemNeu\_BFE@{\tt  assemNeu\_BFE}|textit}{64}
+\indexentry{quadratic finite elements!Neumann boundary conditions|hyperpage}{64}
+\indexentry{assem\_QFE@{\tt  assem\_QFE}|textit}{64}
+\indexentry{shap\_QFE@{\tt  shap\_QFE}|hyperpage}{64}
+\indexentry{hpFEM@$hp$FEM!Neumann boundary conditions|hyperpage}{64}
+\indexentry{assemNeu\_hp@{\tt  assemNeu\_hp}|textit}{64}
+\indexentry{Elem2Dof@{\tt  Elem2Dof}|hyperpage}{64}
+\indexentry{boundary conditions!Neumann boundary conditions|)hyperpage}{64}
+\indexentry{boundary conditions|)hyperpage}{64}
+\indexentry{plot|(hyperpage}{65}
+\indexentry{plot!solution|(hyperpage}{65}
+\indexentry{U@{\tt  U}|hyperpage}{65}
+\indexentry{Mesh@{\tt  Mesh}|hyperpage}{65}
+\indexentry{plot\_LFE@{\tt  plot\_LFE}|hyperpage}{65}
+\indexentry{main\_LFE@{\tt  main\_LFE}|textit}{65}
+\indexentry{constant finite elements!plot solution|hyperpage}{66}
+\indexentry{plot\_P0@{\tt  plot\_P0}|textit}{66}
+\indexentry{linear finite elements!plot solution|hyperpage}{66}
+\indexentry{plot\_1D@{\tt  plot\_1D}|textit}{66}
+\indexentry{Coordinates@{\tt  Coordinates}|hyperpage}{66}
+\indexentry{plot\_LFE@{\tt  plot\_LFE}|textit}{66}
+\indexentry{plot\_LFEfancy@{\tt  plot\_LFEfancy}|textit}{66}
+\indexentry{plot\_DGLFE@{\tt  plot\_DGLFE}|textit}{66}
+\indexentry{plot\_LFE2@{\tt  plot\_LFE2}|textit}{66}
+\indexentry{bilinear finite elements!plot solution|hyperpage}{66}
+\indexentry{plot\_BFE@{\tt  plot\_BFE}|textit}{66}
+\indexentry{Crouzeix-Raviart finite elements!plot solution|hyperpage}{66}
+\indexentry{plot\_CR@{\tt  plot\_CR}|textit}{66}
+\indexentry{plot\_DGCR@{\tt  plot\_DGCR}|textit}{66}
+\indexentry{quadratic finite elements!plot solution|hyperpage}{67}
+\indexentry{plot\_QFE@{\tt  plot\_QFE}|textit}{67}
+\indexentry{refine\_REG@{\tt  refine\_REG}|hyperpage}{67}
+\indexentry{Whitney 1-forms!plot solution|hyperpage}{67}
+\indexentry{plot\_W1F@{\tt  plot\_W1F}|textit}{67}
+\indexentry{get\_MeshWidth@{\tt  get\_MeshWidth}|hyperpage}{67}
+\indexentry{shape\_W1F@{\tt  shape\_W1F}|hyperpage}{67}
+\indexentry{Edges@{\tt  Edges}|hyperpage}{67}
+\indexentry{Vert2Edge@{\tt  Vert2Edge}|hyperpage}{67}
+\indexentry{hpFEM@$hp$FEM!plot solution|hyperpage}{67}
+\indexentry{plot\_hp\_1D@{\tt  plot\_hp\_1D}|textit}{67}
+\indexentry{shap\_Leg\_1D@{\tt  shap\_Leg\_1D}|hyperpage}{67}
+\indexentry{plot\_hp@{\tt  plot\_hp}|textit}{67}
+\indexentry{split\_RefElem@{\tt  split\_RefElem}|textit}{67}
+\indexentry{RefCoord@{\tt  RefCoord}|textit}{67}
+\indexentry{RefElem@{\tt  RefElem}|textit}{67}
+\indexentry{split\_RefElem@{\tt  split\_RefElem}|hyperpage}{67}
+\indexentry{shap\_hp@{\tt  shap\_hp}|hyperpage}{68}
+\indexentry{Elem2Dof@{\tt  Elem2Dof}|hyperpage}{68}
+\indexentry{plot!solution|)hyperpage}{68}
+\indexentry{plot!line|(hyperpage}{68}
+\indexentry{main\_LFE@{\tt  main\_LFE}|hyperpage}{68}
+\indexentry{linear finite elements!plot section of solution|hyperpage}{69}
+\indexentry{plotLine\_LFE@{\tt  plotLine\_LFE}|textit}{69}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{69}
+\indexentry{quadratic finite elements!plot section of solution|hyperpage}{69}
+\indexentry{plotLine\_QFE@{\tt  plotLine\_QFE}|textit}{69}
+\indexentry{shap\_QFE@{\tt  shap\_QFE}|hyperpage}{69}
+\indexentry{plot!line|)hyperpage}{69}
+\indexentry{plot!contours|(hyperpage}{69}
+\indexentry{contour\_LFE@{\tt  contour\_LFE}|hyperpage}{69}
+\indexentry{main\_ContourExample@{\tt  main\_ContourExample}|textit}{69}
+\indexentry{linear finite elements!contour plot of solution|hyperpage}{69}
+\indexentry{get\_MeshWidth@{\tt  get\_MeshWidth}|hyperpage}{69}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{69}
+\indexentry{contour\_LFE@{\tt  contour\_LFE}|textit}{69}
+\indexentry{main\_ContourExample@{\tt  main\_ContourExample}|textit}{69}
+\indexentry{Crouzeix-Raviart finite elements!contour plot of solution|hyperpage}{70}
+\indexentry{contour\_DGCR@{\tt  contour\_DGCR}|textit}{70}
+\indexentry{shap\_DGCR@{\tt  shap\_DGCR}|hyperpage}{70}
+\indexentry{main\_CA\_2@{\tt  main\_CA\_2}|hyperpage}{70}
+\indexentry{plot!contours|)hyperpage}{70}
+\indexentry{plot|)hyperpage}{70}
+\indexentry{discretization errors|(hyperpage}{71}
+\indexentry{norms|(hyperpage}{71}
+\indexentry{solution!finite element|hyperpage}{71}
+\indexentry{solution!exact|hyperpage}{71}
+\indexentry{quadrature rules|hyperpage}{71}
+\indexentry{QuadRule@{\tt  QuadRule}|hyperpage}{71}
+\indexentry{Mesh@{\tt  Mesh}|hyperpage}{71}
+\indexentry{Coordinates@{\tt  Coordinates}|hyperpage}{72}
+\indexentry{Elements@{\tt  Elements}|hyperpage}{72}
+\indexentry{Edges@{\tt  Edges}|hyperpage}{72}
+\indexentry{Vert2Edge@{\tt  Vert2Edge}|hyperpage}{72}
+\indexentry{L2Err\_LFE@{\tt  L2Err\_LFE}|hyperpage}{72}
+\indexentry{shape functions|hyperpage}{72}
+\indexentry{u\_EX@{\tt u\_EX}|textit}{72}
+\indexentry{u\_FE@{\tt u\_FE}|textit}{72}
+\indexentry{grad\_u\_EX@{\tt  grad\_u\_EX}|hyperpage}{72}
+\indexentry{grad\_u\_FE@{\tt  grad\_u\_FE}|hyperpage}{72}
+\indexentry{H1-norm@$H^1$-norm|(hyperpage}{72}
+\indexentry{grad\_u\_EX@{\tt  grad\_u\_EX}|textit}{73}
+\indexentry{grad\_u\_FE@{\tt  grad\_u\_FE}|textit}{73}
+\indexentry{u\_EX@{\tt u\_EX}|hyperpage}{73}
+\indexentry{shape functions!gradients|hyperpage}{73}
+\indexentry{H1Err\_LFE@{\tt  H1Err\_LFE}|hyperpage}{73}
+\indexentry{linear finite elements!H1-norm@$H^1$-norm|hyperpage}{73}
+\indexentry{H1Err\_P1\_1D@{\tt  H1Err\_P1\_1D}|textit}{73}
+\indexentry{shap\_P1\_1D@{\tt  shap\_P1\_1D}|hyperpage}{73}
+\indexentry{grad\_shap\_P1\_1D@{\tt  grad\_shap\_P1\_1D}|hyperpage}{73}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{73}
+\indexentry{grad\_shap\_LFE@{\tt  grad\_shap\_LFE}|hyperpage}{73}
+\indexentry{H1Err\_LFE@{\tt  H1Err\_LFE}|textit}{73}
+\indexentry{bilinear finite elements!H1-norm@$H^1$-norm|hyperpage}{73}
+\indexentry{H1Err\_BFE@{\tt  H1Err\_BFE}|textit}{73}
+\indexentry{shap\_BFE@{\tt  shap\_BFE}|hyperpage}{73}
+\indexentry{grad\_shap\_BFE@{\tt  grad\_shap\_BFE}|hyperpage}{73}
+\indexentry{quadratic finite elements!H1-norm@$H^1$-norm|hyperpage}{73}
+\indexentry{Vert2Edge@{\tt  Vert2Edge}|hyperpage}{73}
+\indexentry{H1Err\_QFE@{\tt  H1Err\_QFE}|textit}{73}
+\indexentry{shap\_QFE@{\tt  shap\_QFE}|hyperpage}{73}
+\indexentry{grad\_shap\_QFE@{\tt  grad\_shap\_QFE}|hyperpage}{74}
+\indexentry{H1Err\_PBD@{\tt  H1Err\_PBD}|textit}{74}
+\indexentry{Delta@{\tt  Delta}|textit}{74}
+\indexentry{Mesh@{\tt  Mesh}|hyperpage}{74}
+\indexentry{hpFEM@$hp$FEM!H1-norm@$H^1$-norm|hyperpage}{74}
+\indexentry{H1Err\_hp@{\tt  H1Err\_hp}|textit}{74}
+\indexentry{shap\_hp@{\tt  shap\_hp}|hyperpage}{74}
+\indexentry{Elem2Dof@{\tt  Elem2Dof}|hyperpage}{74}
+\indexentry{H1-norm@$H^1$-norm|)hyperpage}{74}
+\indexentry{H1-semi-norm@$H^1$-semi-norm|(hyperpage}{74}
+\indexentry{H1SErr@{\tt  H1SErr}|textit}{74}
+\indexentry{grad\_u\_EX@{\tt  grad\_u\_EX}|hyperpage}{74}
+\indexentry{linear finite elements!H1-semi-norm@$H^1$-semi-norm|hyperpage}{74}
+\indexentry{H1SErr\_P1\_1D@{\tt  H1SErr\_P1\_1D}|textit}{74}
+\indexentry{grad\_shap\_P1\_1D@{\tt  grad\_shap\_P1\_1D}|hyperpage}{75}
+\indexentry{H1SErr\_LFE@{\tt  H1SErr\_LFE}|textit}{75}
+\indexentry{grad\_shap\_LFE@{\tt  grad\_shap\_LFE}|hyperpage}{75}
+\indexentry{H1SErr\_DGLFE@{\tt  H1SErr\_DGLFE}|textit}{75}
+\indexentry{grad\_shap\_DGLFE@{\tt  grad\_shap\_DGLFE}|hyperpage}{75}
+\indexentry{ElemFlag@{\tt  ElemFlag}|hyperpage}{75}
+\indexentry{grad\_u\_EX@{\tt  grad\_u\_EX}|hyperpage}{75}
+\indexentry{bilinear finite elements!H1-semi-norm@$H^1$-semi-norm|hyperpage}{75}
+\indexentry{H1SErr\_BFE@{\tt  H1SErr\_BFE}|textit}{75}
+\indexentry{shap\_BFE@{\tt  shap\_BFE}|hyperpage}{75}
+\indexentry{grad\_shap\_BFE@{\tt  grad\_shap\_BFE}|hyperpage}{75}
+\indexentry{Crouzeix-Raviart finite elements!H1-semi-norm@$H^1$-semi-norm|hyperpage}{75}
+\indexentry{grad\_shap\_CR@{\tt  grad\_shap\_CR}|hyperpage}{75}
+\indexentry{H1SErr\_CR@{\tt  H1SErr\_CR}|textit}{75}
+\indexentry{H1SErr\_DGCR@{\tt  H1SErr\_DGCR}|textit}{75}
+\indexentry{ElemFlag@{\tt  ElemFlag}|hyperpage}{75}
+\indexentry{Vert2Edge@{\tt  Vert2Edge}|hyperpage}{75}
+\indexentry{quadratic finite elements!H1-semi-norm@$H^1$-semi-norm|hyperpage}{75}
+\indexentry{H1SErr\_QFE@{\tt  H1SErr\_QFE}|textit}{75}
+\indexentry{Vert2Edge@{\tt  Vert2Edge}|hyperpage}{75}
+\indexentry{H1Err\_PBD@{\tt  H1Err\_PBD}|hyperpage}{75}
+\indexentry{H1SErr\_PBD@{\tt  H1SErr\_PBD}|textit}{75}
+\indexentry{hpFEM@$hp$FEM!H1-semi-norm@$H^1$-semi-norm|hyperpage}{75}
+\indexentry{H1SErr\_hp@{\tt  H1SErr\_hp}|textit}{75}
+\indexentry{H1-semi-norm@$H^1$-semi-norm|)hyperpage}{75}
+\indexentry{L1-norm@{$L^1$-norm}|hyperpage}{76}
+\indexentry{Crouzeix-Raviart finite elements!L1-norm@$L^1$-norm|hyperpage}{76}
+\indexentry{shap\_DGCR@{\tt  shap\_DGCR}|hyperpage}{76}
+\indexentry{L1Err\_DGCR@{\tt  L1Err\_DGCR}|textit}{76}
+\indexentry{hpFEM@$hp$FEM!L1-norm@$L^1$-norm|hyperpage}{76}
+\indexentry{L1Err\_hpDG\_1D@{\tt  L1Err\_hpDG\_1D}|textit}{76}
+\indexentry{Coordinates@{\tt  Coordinates}|hyperpage}{76}
+\indexentry{shap\_Leg\_1D@{\tt  shap\_Leg\_1D}|hyperpage}{76}
+\indexentry{L2Err\_hpDG\_1D@{\tt  L2Err\_hpDG\_1D}|hyperpage}{76}
+\indexentry{linear finite volumes!L1-norm@$L^1$-norm|hyperpage}{76}
+\indexentry{L1Err\_LFV@{\tt  L1Err\_LFV}|textit}{76}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{76}
+\indexentry{L2-norm@$L^2$-norm|(hyperpage}{77}
+\indexentry{constant finite elements!L2-norm@$L^2$-norm|hyperpage}{77}
+\indexentry{L2Err\_PC@{\tt  L2Err\_PC}|textit}{77}
+\indexentry{linear finite elements!L2-norm@$L^2$-norm|hyperpage}{77}
+\indexentry{L2Err\_P1\_1D@{\tt  L2Err\_P1\_1D}|textit}{77}
+\indexentry{shap\_P1\_1D@{\tt  shap\_P1\_1D}|hyperpage}{77}
+\indexentry{gauleg@{\tt  gauleg}|hyperpage}{77}
+\indexentry{main\_1D@{\tt  main\_1D}|hyperpage}{77}
+\indexentry{linear vector-valued finite elements!L2-norm@$L^2$-norm|hyperpage}{77}
+\indexentry{L2Err\_LFE@{\tt  L2Err\_LFE}|textit}{77}
+\indexentry{shap\_LFE@{\tt  shap\_LFE}|hyperpage}{77}
+\indexentry{L2Err\_LFE2@{\tt  L2Err\_LFE2}|textit}{77}
+\indexentry{shap\_LFE2@{\tt  shap\_LFE2}|hyperpage}{77}
+\indexentry{L2Err\_DGLFE@{\tt  L2Err\_DGLFE}|textit}{77}
+\indexentry{shap\_DGLFE@{\tt  shap\_DGLFE}|hyperpage}{77}
+\indexentry{main\_4@{\tt  main\_4}|hyperpage}{77}
+\indexentry{P3O3@{\tt  P3O3}|hyperpage}{77}
+\indexentry{bilinear finite elements!L2-norm@$L^2$-norm|hyperpage}{77}
+\indexentry{L2Err\_BFE@{\tt  L2Err\_BFE}|textit}{77}
+\indexentry{shap\_BFE@{\tt  shap\_BFE}|hyperpage}{77}
+\indexentry{grad\_shap\_BFE@{\tt  grad\_shap\_BFE}|hyperpage}{77}
+\indexentry{TProd@{\tt  TProd}|hyperpage}{77}
+\indexentry{Crouzeix-Raviart finite elements!L2-norm@$L^2$-norm|hyperpage}{77}
+\indexentry{Vert2Edge@{\tt  Vert2Edge}|hyperpage}{77}
+\indexentry{L2Err\_CR@{\tt  L2Err\_CR}|textit}{77}
+\indexentry{shap\_CR@{\tt  shap\_CR}|hyperpage}{77}
+\indexentry{L2Err\_DGCR@{\tt  L2Err\_DGCR}|textit}{77}
+\indexentry{shap\_DGCR@{\tt  shap\_DGCR}|hyperpage}{77}
+\indexentry{quadratic finite elements!L2-norm@$L^2$-norm|hyperpage}{78}
+\indexentry{L2Err\_QFE@{\tt  L2Err\_QFE}|textit}{78}
+\indexentry{shap\_QFE@{\tt  shap\_QFE}|hyperpage}{78}
+\indexentry{Vert2Edge@{\tt  Vert2Edge}|hyperpage}{78}
+\indexentry{L2Err\_PBD@{\tt  L2Err\_PBD}|textit}{78}
+\indexentry{Whitney 1-forms!L2-norm@$L^2$-norm|hyperpage}{78}
+\indexentry{L2Err\_W1F@{\tt  L2Err\_W1F}|textit}{78}
+\indexentry{Vert2Edge@{\tt  Vert2Edge}|hyperpage}{78}
+\indexentry{Edges@{\tt  Edges}|hyperpage}{78}
+\indexentry{hpFEM@$hp$FEM!L2-norm@$L^2$-norm|hyperpage}{78}
+\indexentry{L2Err\_hpDG\_1D@{\tt  L2Err\_hpDG\_1D}|textit}{78}
+\indexentry{Elem2Dof@{\tt  Elem2Dof}|hyperpage}{78}
+\indexentry{shap\_hp@{\tt  shap\_hp}|hyperpage}{78}
+\indexentry{L2Err\_hp@{\tt  L2Err\_hp}|textit}{78}
+\indexentry{L2Err\_LFV@{\tt  L2Err\_LFV}|hyperpage}{78}
+\indexentry{linear finite volumes!L2-norm@$L^2$-norm|hyperpage}{78}
+\indexentry{L2Err\_PWDG@{\tt  L2Err\_PWDG}|textit}{78}
+\indexentry{L2-norm@$L^2$-norm|)hyperpage}{78}
+\indexentry{Linf-norm@$L^{\infty}$-norm|(hyperpage}{78}
+\indexentry{linear finite elements!Linf-norm@$L^{\infty}$-norm|hyperpage}{79}
+\indexentry{LInfErr\_1D@{\tt  LInfErr\_1D}|textit}{79}
+\indexentry{LInfErr\_LFE@{\tt  LInfErr\_LFE}|textit}{79}
+\indexentry{LInfErr\_PBD@{\tt  LInfErr\_PBD}|textit}{79}
+\indexentry{get\_BdEdges@{\tt  get\_BdEdges}|hyperpage}{79}
+\indexentry{bilinear finite elements!Linf-norm@$L^{\infty}$-norm|hyperpage}{79}
+\indexentry{LInfErr\_BFE@{\tt  LInfErr\_BFE}|textit}{79}
+\indexentry{quadratic finite elements!Linf-norm@$L^{\infty}$-norm|hyperpage}{79}
+\indexentry{LInfErr\_QFE@{\tt  LInfErr\_QFE}|textit}{79}
+\indexentry{hpFEM@$hp$FEM!Linf-norm@$L^{\infty}$-norm|hyperpage}{79}
+\indexentry{LinfErr\_hpDG\_1D@{\tt  LinfErr\_hpDG\_1D}|textit}{79}
+\indexentry{linear finite volumes!Linf-norm@$L^{\infty}$-norm|hyperpage}{80}
+\indexentry{LInfErr\_LFV@{\tt  LInfErr\_LFV}|hyperpage}{80}
+\indexentry{Linf-norm@$L^{\infty}$-norm|)hyperpage}{80}
+\indexentry{discretization errors|)hyperpage}{80}
+\indexentry{add\_MidPoints@{\tt add\_MidPoints}|hyperpage}{101}
+\indexentry{plot\_Mesh\_LFV@{\tt plot\_Mesh\_LFV}|hyperpage}{101}
+\indexentry{assemMat\_CD\_LFV@{\tt assemMat\_CD\_LFV}|hyperpage}{105}
+\indexentry{L1Err\_LFV@{\tt  L1Err\_LFV}|hyperpage}{106}
+\indexentry{L2Err\_LFV@{\tt  L2Err\_LFV}|hyperpage}{106}
+\indexentry{LInfErr\_LFV@{\tt  LInfErr\_LFV}|hyperpage}{106}
+\indexentry{P7O6@{\tt  P7O6}|hyperpage}{106}
+\indexentry{assemDir\_LFV@{\tt  assemDir\_LFV}|textit}{106}
+\indexentry{assemLoad\_LFV@{\tt  assemLoad\_LFV}|textit}{107}
+\indexentry{assemMat\_CD\_LFV@{\tt  assemMat\_CD\_LFV}|textit}{107}
+\indexentry{assemMat\_LFV@{\tt  assemMat\_LFV}|textit}{107}
+\indexentry{assemNeu\_LFV@{\tt  assemNeu\_LFV}|textit}{107}
+\indexentry{STIMA\_GenGrad\_LFV@{\tt  STIMA\_GenGrad\_LFV}|textit}{107}
+\indexentry{STIMA\_GenLapl\_LFV@{\tt  STIMA\_GenLapl\_LFV}|textit}{107}
+\indexentry{STIMA\_ZerOrd\_LFV@{\tt  STIMA\_ZerOrd\_LFV}|textit}{107}
+\indexentry{L1Err\_LFV@{\tt  L1Err\_LFV}|textit}{107}
+\indexentry{L2Err\_LFV@{\tt  L2Err\_LFV}|textit}{107}
+\indexentry{LInfErr\_LFV@{\tt  LInfErr\_LFV}|textit}{108}
+\indexentry{add\_MidPoints@{\tt  add\_MidPoints}|textit}{108}
+\indexentry{plot\_Mesh\_LFV@{\tt  plot\_Mesh\_LFV}|textit}{108}

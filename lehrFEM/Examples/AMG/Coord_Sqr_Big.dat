@@ -1,0 +1,10 @@
+% List of vertices
+%
+%
+%   The first column contains the global index of each vertex.
+%
+
+1      -2.000000e+00  -2.000000e+00
+2      +2.000000e+00  -2.000000e+00
+3      +2.000000e+00  +2.000000e+00
+4      -2.000000e+00  +2.000000e+00

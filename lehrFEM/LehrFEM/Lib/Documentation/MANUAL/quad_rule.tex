@@ -1,0 +1,110 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Quadrature formulas %%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Numerical Integration} \label{chap:quad_rule} \index{quadrature rules|(} \index{integration!numerical|see{quadrature rules}}
+
+ Numerical integration is needed for the computation of the load vector in \ref{sect:assem_load}, the incorporation of the Neumann boundary conditions in \ref{sect:assem_neu} and in some cases -- e.g. for the $hp$FEM -- also for the computation of the element stiffness matrices (if the differential operator doesn't permit analytic integration) and the incorporation of the Dirichlet boundary conditions. \\
+
+ The quadrature rules in \LIBNAME are stored in the folder {\tt /Lib/QuadRules}. There are 1D and 2D quadrature rules implemented and listed below. For some basic formulas of numerical integration see for example \cite{AS64}, chapter 25.
+
+
+%%%%% Data structure %%%%%%
+
+\section{Data Structure of Quadrature Rules} \index{quadrature rules!data structure}
+
+ A $Q$-point quadrature rule \ttitindex{QuadRule} computes a quadrature rule on a standard reference element. The \MATLAB struct contains the fields weights {\tt w} and abscissae {\tt x}. They are specified in table \ref{tab:quad_rule}.
+
+\begin{table}[htb]
+  \begin{tabular}{p{0.5cm}p{10.5cm}}
+	{\tt w} & {\small $Q$-by-$1$ matrix specifying the weights of the quadrature rule} \\
+    	{\tt x} & {\small $Q$-by-$1$ (1D) or $Q$-by-$2$ (2D) matrix specifying the abscissae of the quadrature rule}
+  \end{tabular}
+  \caption{Quadrature rule structure \index{quadrature rules!data structure}}
+  \label{tab:quad_rule}
+\end{table}
+
+ In the following sections {\tt QuadRule\_1D} and {\tt QuadRule\_2D} are used instead of {\tt QuadRule} to highlight their dimension. \\
+
+ The barycentric coordinates {\tt xbar} of the quadrature points {\tt x} may be recovered by \\
+
+\noindent {\tt >> xbar = [Quadrule.x, 1-sum(QuadRule.x,2)];} \\
+
+
+% overview: http://mathworld.wolfram.com/topics/NumericalIntegration.html (1D) and http://www.iopb.res.in/~somen/abramowitz_and_stegun
+
+%%%%% 1D quadrature rules %%%%%
+
+\section{1D Quadrature Rules} \label{sect:quad_rule_1d} \index{quadrature rules!1-dimensional|textit}
+
+ The 1D quadrature rules are used for the incorporation of the boundary conditions and generally for 1D problems. The 1D Gauss-Legendre\index{quadrature rules!1-dimensional!Gauss-Legendre|textit}\index{Gauss-Legendre quadrature rule} quadrature rule \ttitindex{gauleg} and the 1D Legendre-Gauss-Lobatto\index{quadrature rules!1-dimensional!Gauss-Legendre-Lobatto|textit}\index{Gauss-Legendre-Lobatto quadrature rule} quadrature rule \ttitindex{gaulob} are implemented in LehrFEM. \\
+
+ They are called by \\
+
+\noindent {\tt >> QuadRule\_1D = gauleg(a,b,n,tol);} \\
+\noindent {\tt >> QuadRule\_1D = gaulob(a,b,n,tol);} \\
+
+ and compute the respective {\tt n}-point quadrature rules on the interval {\tt [a,b]}. The prescribed tolerance {\tt tol} determines the accuracy of the computed integration points. If no tolerance is prescribed the machine precision {\tt eps} is used. \\
+
+ All orders of the quadrature rules {\tt gauleg} are of order $2${\tt n}$-1$, the ones of {\tt gaulob} are of order $2${\tt n}$-3$. The abscissas for quadrature order {\tt n} are given by the roots of the Legendre polynomials $P_{\mathtt{n}}(x)$. In the Lobatte quadrature the two endpoints of the interval are included as well. \\
+
+ The 1D quadrature rules may be transformed to rules on squares resp. triangles by {\tt TProd} resp. {\tt TProd} and {\tt Duffy}. See \ref{ssect:quad_trans} below.
+
+
+%%%%% other functions %%%%%
+
+%\subsection{\textcolor{pink}{Transformations and other modifications?}}
+
+%{\tt TProd} and {\tt Duffy}
+
+
+%%%%% 2D quadrature rules %%%%%
+
+\section{2D Quadrature Rules} \label{sect:quad_rule_2d} \index{quadrature rules!2-dimensional|textit}
+
+ In two dimension two reference elements can be distinguished -- the unit square $[0,1]^2$ and the triangle with the vertices $(0,0)$, $(1,0)$, and $(0,1)$. There are also two different ways to build quadrature rules -- from 1D quadrature rules or from scratch. Both approaches are used in the \LIBNAME and are examined in the following.
+
+\subsection{Transformed 1D Quadrature Rules} \label{ssect:quad_trans} \index{quadrature rules!2-dimensional!transformed|textit}
+
+ The quadrature formula for the unit square are Gaussian quadrature rules which are the tensorized version of 1-dimensional formulas. To this end the tensor product\index{tensor product} \ttitindex{TProd} is applied by \\
+
+\noindent {\tt >> QuadRule\_2D\_square = TProd(QuadRule\_1D);} \\
+
+ where {\tt QuadRule\_1D} is a 1-dimensional quadrature rule of \ref{sect:quad_rule_1d}, i.e. {\tt gauleg} or {\tt gaulob}. This type of integration is used for finite elements defined on sqares such as $[0,1]^2$, e.g. bilinear finite elements. \\
+
+ % e.g. used in main_Heat_BFE etc.
+
+ Furthermore, by the use of the Duffy transformation\index{Duffy transformation} \ttitindex{Duffy} of the integration points and the weights one obtains a 2-dimensional quadrature rule for triangular elements: \\
+
+\noindent {\tt >> QuadRule\_2D\_triangle = Duffy(TProd(QuadRule\_1D));}
+
+The $i$-th integration point then has the coordinates $x_{i,1}$ and $x_{i,2}(1-x_{i,1})$, where $x_{i,1}$ and $x_{i,2}$ are the two coordinates of the non transformed point. Furtheremore the corresponding weights are transformed according to $w_i(1-x_{i,1})$.
+
+% e.g. used in main_hp for hpFEM
+
+\subsection{2D Gaussian Quadrature Rules} \index{quadrature rules!2-dimensional!Gaussian|textit} \index{Gaussian quadrature rule, 2D} \label{ssect:quad_po}
+
+ Several Gaussian quadrature rules on the above mentioned reference triangle are implemented. Their file names are of the form {\tt PnOo}, which stands for '{\tt n}-point quadrature rule of order {\tt O}', e.g. {\tt P4O3}.
+
+These quadrature rules do not need any input since the number of points and the integration domain, i.e. the unit triangle are specified.\\
+
+ The quadrature rules are called by  e.g.\\
+
+\noindent {\tt >> QuadRule\_2D\_triangle = P4O3();} \\
+
+ So far the following quadrature rules are implemented in LehrFEM: \ttitindex{P1O2}, \ttitindex{P3O2}, \ttitindex{P3O3}, \ttitindex{P4O3}, \ttitindex{P6O4}, \ttitindex{P7O4}, \ttitindex{P7O6}, \ttitindex{P10O4} and \ttitindex{P10O5}.
+
+
+\subsection{2D Newton-Cotes Quadrature Rules} \index{quadrature rules!2-dimensional!Newton-Cotes|textit} \index{Newton-Cotes quadrature rule}
+
+ The Newton-Coates quadrature rule for the reference triangle is implemented in {\tt /Lib/QuadRules/private}. Here \ttitindex{ncc\_triangle\_rule} is called by \\
+
+\noindent {\tt >> nc = ncc\_triangle\_rule(o,n);} \\
+
+ where {\tt o} is the order and {\tt n} the number of points. Because the output of this function doesn't have the right format, the program \ttitindex{NCC} tranforms it. After all \\
+
+\noindent {\tt >> QuadRule\_2D\_triangle = NCC(o);} \\
+
+ provides the right data structure as specified in table \ref{tab:quad_rule} for {\tt n}$=10$.
+
+\index{quadrature rules|)}

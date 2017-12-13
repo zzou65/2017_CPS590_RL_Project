@@ -1,0 +1,5 @@
+DG version with IP-DGFEM with alpha =   10.00000, beta =   10.00000
+
+Regular function 1 in square domain
+Mesh Width   L2 Norm of solution   Relative L2 Error     Order     DG Norm of solution   Relative DG norm of Error     Order
+==========   ===================   =================   =========   ===================   =========================   =========

@@ -1,0 +1,48 @@
+\documentclass[a4paper,10pt,oneside]{book}
+
+% Caption of figures shall be centered and not as wide as the pagewidth
+\def\capwidth{0.85\textwidth}
+\def\capsize{\small}
+
+% Imported packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+\usepackage[dvips]{graphics}
+\usepackage{epsfig}
+
+% Name definitions
+\newcommand{\LIBNAME}{LehrFEM }
+\newcommand{\MATLAB}{MATLAB }
+
+% Page headings
+\pagestyle{myheadings}
+\markright{\small\scshape \LIBNAME Manual}
+\pagenumbering{arabic}
+
+% Define titlepage
+\title{\LIBNAME - A 2D Finite Element Toolbox}
+\author{Patrick Meury}
+
+
+\begin{document}
+
+% Make titlepage
+\maketitle
+
+% Make table of contents
+\tableofcontents
+
+% Include intro
+\input intro
+
+% Include mesh generation
+\input mesh_gen
+
+\input hp_FEM
+
+% Make the bibliography
+\bibliography{bibfile}
+\bibliographystyle{unsrt}
+
+\end{document}

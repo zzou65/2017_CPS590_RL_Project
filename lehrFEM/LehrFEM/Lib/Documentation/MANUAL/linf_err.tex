@@ -1,0 +1,78 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Discretization error in LInf norm %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{$L^{\infty}$-Norm} \index{Linf-norm@$L^{\infty}$-norm|(} \label{sect:linf_err}
+
+ The computation of the discretization error in the $L^{\infty}$-norm
+\begin{equation}
+	\Vert f \Vert_{\infty} = \sup_{x \in \Omega} |f(x)|
+\end{equation} 
+ is much easier then the computation of the previous norms. Basically no shape functions nor quadrature rules are needed, except for the $hp$FEM. \\
+
+ The {\tt LInfErr}-functions are e.g. called by \\
+
+\noindent {\tt >> err = LInfErr\_LFE(Mesh,u,FHandle,FParam);} \\
+
+ an compute the discretization error between the finite element solution {\tt u} and the exact solution given by the function handle {\tt FHandle}. Mostly the code just consists of the line \\
+
+\noindent {\tt >> err = max(abs(u-FHandle(Mesh.Coordinates,FParam)));}
+
+
+%% Linear finite elements %%
+
+\subsection{Linear Finite Elements} \index{linear finite elements!Linf-norm@$L^{\infty}$-norm}
+
+\subsubsection{.. in 1D}
+
+ \ttitindex{LInfErr\_1D} is called by \\
+
+\noindent {\tt >> err = LInfErr\_1D(Coordinates,u,FHandle,FParam);}
+
+\subsubsection{.. in 2D}
+
+ \ttitindex{LInfErr\_LFE} computes the discretization error in the 2-dimensional case. \\
+
+ The function \ttitindex{LInfErr\_PBD} calculates the error on linear finite elements with parabolic boundary approximation. The boundary edges of the mesh are extracted by the function \ttindex{get\_BdEdges}. Furthermore the midpoints of the straight and curved edges have to be taken into account which makes the program much more lengthy.
+
+%% Bilinear finite elements %%
+
+\subsection{Bilinear Finite Elements} \index{bilinear finite elements!Linf-norm@$L^{\infty}$-norm}
+
+ \ttitindex{LInfErr\_BFE} computes the discretization error on square elements.
+
+
+%% Quadratic finite elements %%
+
+\subsection{Quadratic Finite Elements} \index{quadratic finite elements!Linf-norm@$L^{\infty}$-norm}
+
+ The discretization error \ttitindex{LInfErr\_QFE} on the quadratic finite elements is a maximum of those at the edges and midpoints.
+
+
+
+%% hpFEM %%
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!Linf-norm@$L^{\infty}$-norm}
+
+ In \ttitindex{LinfErr\_hpDG\_1D} the discretization error is computed via a loop over all elements. The function is called by \\
+
+\noindent {\tt >> err = LinfErr\_hpDG\_1D(Coordinates,p,u,QuadRule,Shap, ... \\
+FHandle,FParam);} \\
+
+ The input arguments are specified in table \ref{tab:err_hp_1d}, p. \pageref{tab:err_hp_1d}.
+
+
+%% Linear finite volumes %%
+
+\subsection{Linear Finite Volumes} \index{linear finite volumes!Linf-norm@$L^{\infty}$-norm}
+
+ \ttindex{LInfErr\_LFV} computes the discretization error in the $L^{\infty}$-norm for linear finite volumes, cf. p. \pageref{LInfErr_LFV}.
+
+
+\index{Linf-norm@$L^{\infty}$-norm|)}
+\index{discretization errors|)}
+
+
+%\section{Other norms}
+
+% EnergyErr..

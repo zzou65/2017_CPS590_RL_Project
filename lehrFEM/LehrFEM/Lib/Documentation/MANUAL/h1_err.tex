@@ -1,0 +1,78 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Discretization error in H1 norm %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{$H^1$-Norm} \index{H1-norm@$H^1$-norm|(} \label{sect:h1_err}
+
+ The discretization error between the exact and the finite element solution on the given mesh w.r.t. the $H^1$-norm is implemented in the {\tt H1Err}-functions stored in {\tt /Lib/Errors}. The $H^1$-norm for suffieciently smooth functions $f: \mathbb{R}^n \supseteq \Omega \rightarrow \mathbb{R}$ is of the form
+\begin{equation} \label{eq:H1_norm}
+	\Vert f \Vert_{H^1(\Omega)} = \left( \int_{\Omega} |f(x)|^2 + |D f(x)|^2 dx \right) ^{\frac{1}{2}}
+\end{equation} 
+ where $|D f(x)|^2 = |\partial_1 f(x)|^2+\ldots+ |\partial_n f(x)|^2$. \\
+
+ To this end, the gradients \ttitindex{grad\_u\_EX} and \ttitindex{grad\_u\_FE} of the solutions are to be computed. For the exact solution this information simple needs to be included in the evaluation of the function handle, i.e. \\
+
+\noindent {\tt >> [u\_EX,grad\_u\_EX] = FHandle(x,FParam);} \index{u\_EX@{\tt u\_EX}} \\
+
+ For the computation of {\tt grad\_u\_FE}, the gradients\index{shape functions!gradients} {\tt grad\_N} of the respective shape functions are needed, i.e. in \ttindex{H1Err\_LFE} for the {\tt i}-th element \\
+
+\noindent {\tt >> grad\_u\_FE = (u(Mesh.Elements(i,1))*grad\_N(:,1:2)+ ... \\
+u(Mesh.Elements(i,2))*grad\_N(:,3:4)+ ... \\
+u(Mesh.Elements(i,3))*grad\_N(:,5:6))*transpose(inv(BK));} \\
+
+ where {\tt BK} is the transformation matrix and \\
+
+\noindent {\tt >> grad\_N = grad\_shap\_LFE(QuadRule.x);} \\
+
+ For an extensive discussion of the input parameters and the general procedure of computation see p. \pageref{chap:err}f.
+
+
+%% Linear finite elements %%
+
+\subsection{Linear Finite Elements} \index{linear finite elements!H1-norm@$H^1$-norm} 
+
+\subsubsection{.. in 1D}
+
+ The function\ttitindex{H1Err\_P1\_1D} requires \ttindex{shap\_P1\_1D} and \ttindex{grad\_shap\_P1\_1D}. It is called by \\
+
+\noindent {\tt >> err = H1Err\_P1\_1D(Coordinates,u,QuadRule,FHandle,FParam);}
+
+\subsubsection{.. in 2D}
+
+ Using \ttindex{shap\_LFE} and \ttindex{grad\_shap\_LFE} the function \ttitindex{H1Err\_LFE} computes the discretization error between the exact solution given and the finite element solution.
+
+
+%% Bilinear finite elements %%
+
+\subsection{Bilinear Finite Elements} \index{bilinear finite elements!H1-norm@$H^1$-norm} 
+
+ Similarily, \ttitindex{H1Err\_BFE} makes use of \ttindex{shap\_BFE} and \ttindex{grad\_shap\_BFE}.
+
+
+%% Quadratic finite elements %%
+
+\subsection{Quadratic Finite Elements} \index{quadratic finite elements!H1-norm@$H^1$-norm} \label{ssect:h1err_qfe}
+
+ In this case there are nodes on the edges, hence the field \ttindex{Vert2Edge} (see table \ref{tab:err_mesh2}, p. \pageref{tab:err_mesh2}) is needed for the extraction of the edge numbers. The computation in \ttitindex{H1Err\_QFE} is the same as described above. The functions \ttindex{shap\_QFE} and \ttindex{grad\_shap\_QFE} are called. \\
+
+ \ttitindex{H1Err\_PBD} computes the discretization error w.r.t. the $H^1$-norm for quadra\-tic finite elements with parabolic boundary approximation. If the boundary correction term stored in the {\tt Mesh} field {\tt Delta} (see table \ref{tab:mesh.delta}) is greater than {\tt eps} then the computation is done for a curved element, otherwise for a straight element.
+
+\begin{table}[htb]
+  \begin{tabular}{p{1cm}p{10cm}}
+    \ttitindex{Delta} & {\small $P$-by-$1$ matrix specifying the boundary correction term on every edge}
+  \end{tabular}
+  \caption{Field {\tt Delta} of struct \ttindex{Mesh}}
+  \label{tab:mesh.delta}
+\end{table}
+
+
+%% hpFEM %%
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!H1-norm@$H^1$-norm} \label{ssect:h1err_hp}
+
+ The computation of the $H^1$ discretization error in \ttitindex{H1Err\_hp} is more complex, more precisely the computation of the finite element solution {\tt u\_FE} and its gradient {\tt grad\_u\_FE}. Additional input arguments are the shape functions {\tt Shap} (contains the values of the shape functions and its gradients computed by \ttindex{shap\_hp}, p. \pageref{ssect:shap_hp}) and \ttindex{Elem2Dof} (extracts the degrees of freedom). The error is computed by \\
+
+\noindent {\tt >> err = H1Err\_hp(Mesh,u,Elem2Dof,QuadRule,Shap,FHandle,FParam);}
+
+
+\index{H1-norm@$H^1$-norm|)}

@@ -1,0 +1,140 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Element mass matrices %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Element Mass Matrices} \label{sect:mass} \index{element mass matrix|(}
+
+ The main input argument for the computation of the element mass matrices are the \ttindex{Vertices} of the current element, in most cases it is the only one. On the other hand, \ttindex{QuadRule} is needed and shape functions\index{shape functions} are called within the function to compute the element map. See table \ref{tab:stima_in} for details. Further arguments are defined when they appear. No operator is to be specified in a function handle, but e.g. weight functions which appear in the {\tt MASS\_Weight}-functions. \\
+
+ If not specified otherwise the functions are e.g. called by \\
+
+\noindent {\tt >> Mloc = MASS\_LFE(Vertices);} \\
+
+ The computation of the element mass matrices \ttitindex{Mloc} is pretty much the same as the one for the element stiffness matrices \ttindex{Aloc} described in the previous section. \\
+
+ The element mass matrices {\tt Mloc} are $l$-by-$l$ matrices where $l$ are the local degrees of freedom. Like the element stiffness matrices they are assembled\index{assembling!global matrix} to the mass matrix\index{mass matrix} \ttindex{M} by the {\tt assemMat}-functions, p. \pageref{sect:assem_mat}.
+
+
+% ueberarbeiten: input = vertices, output = Mloc, computation easy..
+% weight und vol functionen einbauen
+
+\subsection{Constant Finite Elements} \index{constant finite elements!element mass matrix}
+
+ To call \ttitindex{MASS\_P0\_1D} and \ttitindex{MASS\_P0} only the coordinates of the vertices are needed: \\
+
+\noindent {\tt >> Mloc = MASS\_P0\_1D(Vertices);} \\
+\noindent {\tt >> Mloc = MASS\_P0(Vertices);} \\
+
+%% weight/heat???
+ The weighted versions \ttitindex{MASS\_Weight\_P0\_1D} and \ttitindex{MASS\_Weight\_P0} are called by \\
+
+\noindent {\tt >> Mloc = MASS\_Weight\_P0\_1D(Vertices,QuadRule,FHandle,FParam);} \\
+\noindent {\tt >> Mloc = MASS\_Weight\_P0(Vertices,ElemInfo,QuadRule, ... \\
+FHandle,FParam);}
+
+
+\subsection{Linear Finite Elements} \index{linear finite elements!element mass matrix}
+
+\subsubsection{.. in 1D}
+
+ \ttitindex{MASS\_P1\_1D} computes the $2$-by-$2$ element mass matrix using linear finite elemnts. The weighted version \ttitindex{MASS\_Weight\_P1\_1D} uses \ttindex{shap\_P1\_1D} and is called by \\
+
+{\tt >> Mloc = MASS\_Weight\_P1\_1D(Vertices,QuadRule,FHandle,FParam);}
+
+\subsubsection{.. in 2D}
+
+ Similarily, \ttitindex{MASS\_LFE} and \ttindex{MASS\_LFE2} compute the element mass matrix in 2D. Here, {\tt Mloc} are a $3$-by-$3$ and -- in the vectorial case -- a $6$-by-$6$ matrix.
+
+
+ The function \ttitindex{MASS\_Weight\_LFE} computes the element mass matrix with a given weight. It makes use of the shape functions \ttindex{shap\_LFE} and is called by \\
+
+\noindent {\tt >> Mloc = MASS\_Weight\_LFE(Vertices,ElemInfo,QuadRule, ... \\
+FHandle,FParam);} \\
+
+ where {\tt FHandle} denotes the function handle to the weight function and {\tt FParam} its variable length argument list.
+
+
+\subsection{Bilinear Finite Elements} \index{bilinear finite elements!element mass matrix}
+
+ The $4$-by-$4$ element mass matrix using bilinear Lagrangian elements is computed by \\
+
+\noindent {\tt >> Mloc = \ttitindex{MASS\_BFE}(Vertices,ElemInfo,QuadRule);} \\
+
+ \ttindex{shap\_BFE} and \ttindex{grad\_shap\_BFE} are used for the computation of the element mapping.
+
+
+\subsection{Crouzeix-Raviart Finite Elements} \index{Crouzeix-Raviart finite elements!element mass matrix}
+
+ \ttitindex{MASS\_CR} computes the $3$-by-$3$ element mass matrix. \ttitindex{MASS\_Vol\_DGCR} computes the element mass matrix using discontinuous Crouzeix-Raviart finite elements.
+
+
+\subsection{Quadratic Finite Elements} \index{quadratic finite elements!element mass matrix}
+
+ The $6$-by-$6$ element mass matrix is given by \ttitindex{MASS\_QFE}.
+
+
+\subsection{Whitney 1-Forms} \index{Whitney 1-forms!element mass matrix}
+
+ \ttitindex{MASS\_W1F} computes the element mass matrix with weight {\tt MU\_Handle} for edge elements. It is specified in table \ref{tab:mu_handle}.
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+    {\tt MU\_Handle} & {\small handle to a functions expecting a matrix whose rows represent position arguments. Return value must be a vector (variable arguments {\tt MU\_Param} will be passed to this function).} \\
+  \end{tabular}
+  \caption{Weight {\tt MU\_Handle}}
+  \label{tab:mu_handle}
+\end{table}
+
+ The function is called by \\
+
+\noindent {\tt >> Mloc = MASS\_W1F(Vertices,ElemInfo,MU\_Handle,QuadRule,MU\_Param);}
+
+
+
+\subsection{DG finite elements}
+
+
+
+
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!element mass matrix}
+
+\subsubsection{.. in  1D}
+
+ The ({\tt p}$+1$)-by-({\tt p}$+1$) element mass matrix \ttitindex{MASS\_hpDG\_1D} in the 1-dimensional case is computed by \\
+
+\noindent {\tt >> Mloc = MASS\_hpDG\_1D(Coordinates,p,QuadRule,Shap);} \\
+
+ \ttitindex{MASS\_Vol\_hpDG\_1D} is called by \\
+
+\noindent {\tt >> Mloc = MASS\_Vol\_hpDG\_1D(Vertices,p,QuadRule,Shap);}
+
+\subsubsection{.. in 2D}
+
+ More input arguments are needed for the 2-dimensional \ttitindex{MASS\_hp}, e.g. the different polynomial degrees of the shape functions as well as the orientation of the edges. These new input arguments are listed in Table \ref{tab:mass_hp}.
+
+
+
+ Furthermore, the pre-computed shape functions {\tt Shap} (cf. \ref{ssect:shap_hp}, p. \pageref{ssect:shap_hp}) and quadrature rules {\tt QuadRule} (cf. \ref{chap:quad_rule}, p. \pageref{chap:quad_rule}ff) are required. The mass matrix is called by \\
+
+\noindent {\tt >> Mloc = MASS\_hp(Vertices,ElemInfo,EDofs,EDir,CDofs, ... \\
+QuadRule,Shap,varargin);} \\
+
+ and e.g. used for the routine \ttindex{main\_hp} in the folder {\tt /Examples/DiffConv\_exp}. Actually the input arguments {\tt ElemInfo} and {\tt varargin} are not needed for \linebreak
+ {\tt MASS\_hp} but for \ttindex{assemMat\_hp}. \\
+
+ The mass matrix {\tt Mloc} for the $hp$FEM is of dimension ($3+\sum \mathtt{EDof}+ \mathtt{CDof}$)-by-($3+\sum \mathtt{EDof}+ \mathtt{CDof}$).
+
+
+\subsection{Mixed Finite Elements} \index{mixed finite elements!element mass matrix}
+
+ \ttitindex{MASS\_P1P0} computes the element mass matrix using linear and constant Lagrangian finite elements. It is called by \\
+
+\noindent {\tt >> Mloc = MASS\_P1P0(Vertices);} \\
+
+% The only input argument needed for the function is {\tt Vertices}, but since the element mass matrices {\tt MASS\_P1P0} are assembled by {\tt assemMat\_P1P0}, more arguments are required?!
+
+ The element mass matrix with weight is computed by \ttitindex{MASS\_Weight\_P1P0}.
+
+
+\index{element mass matrix|)} 

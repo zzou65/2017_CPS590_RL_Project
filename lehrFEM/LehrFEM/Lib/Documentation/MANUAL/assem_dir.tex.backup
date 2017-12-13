@@ -1,0 +1,228 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Boundary conditions %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Boundary Conditions} \label{chap:bound} \index{boundary conditions|(}
+
+% yet to be done: summarize input of assemDir and assemNeu, structure of programs and output (in case it is the same: delete beginning of both sections)
+
+
+% In the final computation, the Neumann boundary conditions are incorporated before the Dirichlet boundary conditions. In the finite element method, the Neumann boundary condition is automatically satisfied within the Galerkin and variational formulations.. http://www.rzg.mpg.de/~rfs/comas/Helsinki/helsinki04/CompScience/csep/csep1.phy.ornl.gov/bf/node10.html ?
+
+ The next step after the discretization and assembling of the stiffness matrix and load vector is the incorporation of the boundary data. There are two different types of boundary conditions, Dirichlet and Neumann boundary conditions. They both affect the values at the nodes the dirichlet conditions explicitely reduces the dimension of the linear system that has to be solved. \\
+
+ In the the two following sections, there is a short introduction about the data required and the main computational steps. Afterwards the \MATLAB programs for various finite elements of \LIBNAME are listed and discussed.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% incorporating Dirichlet boundary conditions %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Dirichlet Boundary Conditions} \label{sect:assem_dir} \index{boundary conditions!Dirichlet boundary conditions|(}
+
+ For the incorporation of the Dirichlet boundary conditions in LehrFEM, the functions {\tt assemDir} in {\tt /Lib/Assembly} are used. They specify the values a solution needs to take on the boundary of the domain, hence reduce the degrees of freedom. \\
+ 
+ Prescribing Dirichlet data means defining the value of the solution in some of the nodes. Therefore the dimension of the resulting linear system can be reduced by the number of nodes with prescribed value. If the value $\mathtt U_i$ is known do
+\begin{enumerate}
+ \item adjust the right hand side by computing $\mathtt L - \mathtt A_{ji} \mathtt U_i$
+\item delete the $i$-th line
+\end{enumerate}
+
+
+
+ Besides the usual data stored in {\tt Mesh} -- like {\tt Coordinates} and {\tt Edges} -- and the boundary data function {\tt FHandle}, it must be obvious which edges belong to the boundary. This additional information is stored in the field {\tt BdFlags} of the struct {\tt Mesh}. The boundary condition is then only enforced at the vertices of the edges whose boundary flag is equal to the integers {\tt BdFlag} specified in the input. Be aware of the difference between {\tt BdFlags} and {\tt BdFlag} in the following. In the \MATLAB code both are called {\tt BdFlags}, but for the sake of clarity the manual differs from it.
+
+For example it is possible to put the flag of each edge, where a Neumann boundary condition should hold to $-1$ and the flags of those with Dirichlet data to $-2$. However the choice is totally up to the user and there is no a-priori connection between the flags and the boundary conditions.
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+	{\tt Coordinates} & {\small $M$-by-$2$ matrix specifying all vertex coordinates} \\
+    	{\tt Edges} & {\small $P$-by-$2$ matrix specifying all edges of the mesh} \\
+	{\tt BdFlags} & {\small $P$-by-$1$ matrix specifying the boundary type of each boundary edge in the mesh. If edge number {\tt i} belongs to the boundary, then {\tt BdFlags(i)} must be smaller than zero. Boundary flags can be used to parametrize parts of the boundary.}
+  \end{tabular}
+  \caption{Necessary mesh structure\index{boundary conditions!Dirichlet boundary conditions!mesh data} for boundary conditions (2D)}
+  \label{tab:bound_mesh}
+\end{table}
+
+ If not stated otherwise the assembly programs for the Dirichlet boundary conditions are e.g. called by \\
+
+\noindent {\tt >> [U,FreeDofs] = assemDir\_LFE(Mesh,BdFlag,FHandle);} \\
+\noindent {\tt >> [U,FreeDofs] = assemDir\_LFE(Mesh,BdFlag,FHandle,FParam);} \\
+
+\noindent where {\tt FParam} handles the variable argument list for the Dirichlet boundary conditions with the data given by the function handle {\tt FHandle}. {\tt BdFlag} specifies the boundary flag(s) associated to the dirichlet boundary with the function {\tt FHandle}.\\
+
+The code for linear finite elements can be found below.
+
+\begin{lstlisting}
+function [U,FreeDofs]=assemDir_LFE(Mesh,BdFlags,FHandle,varargin)
+%   Copyright 2005-2005 Patrick Meury
+%   SAM - Seminar for Applied Mathematics
+%   ETH-Zentrum
+%   CH-8092 Zurich, Switzerland
+
+% Intialize constants
+
+nCoordinates = size(Mesh.Coordinates,1);
+tmp = [];
+U = zeros(nCoordinates,1);
+ 
+for j = BdFlags
+  
+ % Extract Dirichlet nodes
+  
+ Loc = get_BdEdges(Mesh);
+ DEdges = Loc(Mesh.BdFlags(Loc) == j);
+ DNodes=unique([Mesh.Edges(DEdges,1); Mesh.Edges(DEdges,2)]);
+  
+ % Compute Dirichlet boundary conditions
+  
+ U(DNodes)=FHandle(Mesh.Coordinates(DNodes,:),j,varargin{:});  
+  
+ % Collect Dirichlet nodes in temporary container
+    
+ tmp = [tmp; DNodes];
+    
+end
+  
+% Compute set of free dofs
+  
+FreeDofs = setdiff(1:nCoordinates,tmp);
+  
+return
+\end{lstlisting}
+
+The main steps of the routine above are:
+\begin{itemize}
+ \item initialization of the constants (lines 7-11)
+ \item loop over all Dirichlet boundary flags specified in \texttt{BdFlags} (lines 13-29)
+ \begin{itemize}
+  \item determine Dirichlet nodes (lines 15-19)
+  \item set the value of the finite element solution \texttt{U} in the dirichlet nodes (line 23)
+ \end{itemize}
+ \item compute the nodes that are not part of the Dirichlet boundary
+\end{itemize}
+
+
+
+ The Dirichlet boundary conditions are then incorporated in the finite element solution {\tt U} of the boundary terms and {\tt FreeDofs}:
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+	{\tt U} & {\small sparse $M$-by-$1$ matrix which contains the coefficient vector of the finite element solution with incorporated Dirichlet boundary conditions. The entries are $0$ on non-boundary terms.} \\
+    	\ttitindex{FreeDofs} & {\small $Q$-by-$1$ matrix specifying the degrees of freedom with no prescribed Dirichlet boundary data ($Q = M - \sharp$ Dirichlet nodes)}
+  \end{tabular}
+  \caption{Output of the {\tt assemDir}-functions}
+  \label{tab:bound_out}
+\end{table}
+
+
+ All {\tt assemDir}-functions follow more or less the below-mentioned structure (for all Dirichlet {\tt BdFlag}):
+\begin{enumerate}
+	\item extracting Dirichlet nodes {\tt DNodes} and edges {\tt DEdges} from the {\tt Mesh}
+	\item computation of the Dirichlet boundary conditions {\tt U(Dnodes)} by evaluating {\tt FHandle}
+	\item computation of the remaining degrees of freedom {\tt FreeDofs} using the \MATLAB command {\tt setdiff}
+\end{enumerate}
+
+ In order to extract the Dirichlet boundary edges {\tt DEdges} from the {\tt Mesh}, the function \ttindex{get\_BdEdges} is applied. The \MATLAB command {\tt unique} is then employed to obtain the non-repetitive Dirchlet nodes {\tt DNodes}. The boundary terms for each given {\tt BdFlag} {\tt j} is computed as follows \\
+
+\noindent {\tt >> U(DNodes) = FHandle(Mesh.Coordinates(DNodes,:),j,FParam);} \\
+
+ For edge supported elements like Crouzeix-Raviart, quadratic finite elements and Whitney 1-forms additionally the {\tt Midpoints} of the Dirichlet edges {\tt DEdges} need to be computed.
+
+
+%%% linear FE %%%
+
+\subsection{Linear Finite Elements} \index{linear finite elements!Dirichlet boundary conditions}
+
+\subsubsection{.. in 1D}
+
+ In the 1-dimensional case the input already contains the information about the 1 to 2 boundary point(s) {\tt DNodes} which shortens the function \ttitindex{assemDir\_P1\_1D} a little. It is called by \\
+
+\noindent {\tt >> [U,FreeDofs] = assemDir\_P1\_1D(Coordinates,DNodes,FHandle, ... \\
+FParam);}
+
+% {\tt assemDir\_P1\_1D} is (only) called by {\tt /Examples/1 D\_FEM/main\_1D}.
+
+\subsubsection{.. in 2D} \index{linear vector-valued finite elements!Dirichlet boundary conditions}
+
+ The function \ttitindex{assemDir\_LFE} handles the 2-dimensional case and \ttitindex{assemDir\_LFE2} the vector-valued linear elements. The code is quite similar and the output in the vector-valued case are $2M$- resp. $2N$-vectors, where the second coordinates are attached after all first coordinates.
+
+% \textcolor{pink}{LFE2: Why is {\tt FreeDofs = [tmp tmp+nCoordinates]}? As far as I can see that {\tt tmp} are the number of the inner vertices, hence they should {\tt tmp} appear in {\tt FreeDofs} twice but with the some number?!} No, it is used that way cause also the information of points is stored like this.
+
+% {\tt assemDir\_LFE} is e.g. used in minimal surface problems, algebraic multigrid solvers, {\tt /Examples/QFE\_LFE/main\_LFE} etc. The vector-valued function {\tt assemDir\_LFE2} is e.g. called by the LFE2 finite element solver {\tt /Examples/LFE2/main\_LFE2\_Sqr} and the CG solver with Bramble-Pasciak-Xu preconditioner {\tt /Examples/Solvers/main\_pcg\_bpx\_LFE2}
+
+
+%%% bilinear FE %%%
+
+\subsection{Bilinear Finite Elements} \index{bilinear finite elements!Dirichlet boundary conditions}
+
+ The Dirichlet boundary conditions are incorporated in \ttitindex{assemDir\_BFE} as described above.
+
+% {\tt assemDir\_BFE} is e.g. called by {\tt main\_Heat\_BFE} (heat equation), {\tt main\_Lapl\_BFE\_str} and {\tt ..\_ustr} (Laplacian).
+
+
+%%% Crouzeix-Raviart FE %%%
+
+\subsection{Crouzeix-Raviart Finite Elements} \index{Crouzeix-Raviart finite elements!Dirichlet boundary conditions}
+
+ Since the Crouzeix-Raviart elements are connected to midpoints of edges, they are additionaly computed and stored as {\tt MidPoints} in \ttitindex{assemDir\_CR}. Them {\tt U(DEdges)} is the boundary function evaluated at these midpoints. 
+
+
+%%% quadratic FE %%%
+
+\subsection{Quadratic Finite Elements} \index{quadratic finite elements!Dirichlet boundary conditions}
+
+ As already mentioned in \ref{sssect:shap_QFE}, the quadratic finite elements are connected to vertices and edges. Hence the Dirichlet boundary conditions \ttitindex{assemDir\_QFE} are computed on both, {\tt DNodes} and {\tt Midpoints}, as well as the degrees of freedom. The nodes' contributions are stored as usual and the edges' contributions are attached afterwards (with position $+M$).
+
+% {\tt assemDir\_QFE} is e.g. used in {\tt /Examples/QFE\_LFE/main\_QFE}.
+
+
+%%% Whitney 1-forms %%%
+
+\subsection{Whitney 1-Forms} \index{Whitney 1-forms!Dirichlet boundary conditions}
+
+ The midpoints for the elements are computed using {\tt QuadRule\_1D} (e.g. the Gauss-Legendre quadrature rule\index{quadrature rules} \ttindex{gauleg}, p. \pageref{sect:quad_rule_1d}), which is an additional argument. Hence the according function \ttitindex{assemDir\_W1F} is called by \\
+
+\noindent {\tt >> [U,FreeDofs] = assemDir\_W1F(Mesh,BdFlag,FHandle, ... \\
+QuadRule\_1D,FParam);} \\
+
+The transformation formula is used for the computation of {\tt U(DEdges)}.
+
+
+%%% hp-FEM %%%
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!Dirichlet boundary conditions}
+
+\subsubsection{.. in 1D}
+
+The function \ttitindex{assemDir\_hpDG\_1D} is called by \\
+
+\noindent {\tt >> Aloc = assemDir\_hpDG\_1D(Coordinates,p,Ghandle,shap, ... \\
+grad\_shap,s,alpha,GParam);} 
+
+
+\subsubsection{.. in 2D} \label{ssect:hp_dir}
+
+The $hp$FEM works a little bit different, the additional inputs that are needed for {\tt assemDir} are the {\tt Mesh} fields specified in table \ref{tab:dir_hp}, the struct \ttindex{Elem2Dof} which describes the element to dof (= degrees of freedom) mapping, a quadrature rule {\tt QuadRule}\index{quadrature rules} (cf. \ref{tab:quad_rule}, p. \pageref{tab:quad_rule}) and the values of the shape functions {\tt Shap} at the quadrature points {\tt QuadRule.x} (e.g. the hierarchical shape functions, cf. \ref{ssect:shap_hp}, p. \pageref{ssect:shap_hp}).
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+	\ttindex{Edge2Elem} & {\small $P$-by-$2$ matrix connecting edges to their neighbouring elements. The first column specifies the left hand side element where the second column specifies the right hand side element.} \\
+    	\ttindex{EdgeLoc} & {\small $P$-by-$2$ matrix connecting egdes to local edges of elements. The first column specifies the local number for the left hand side element, the second column the local number for the right hand side element.}
+  \end{tabular}
+  \caption{Additional mesh data structure\index{boundary conditions!Dirichlet boundary conditions!mesh data}}
+  \label{tab:dir_hp}
+\end{table}
+
+ The information stored in {\tt EdgeLoc} is needed for the struct {\tt Elem2Dof}. It contains the fields {\tt tot\_EDofs} and {\tt tot\_CDofs} which specify the total amount of degrees of freedom for edges resp. elements. The degrees of freedom depend on the chosen polynomial degree {\tt p}. \ttindex{Elem2Dof} is generated by the function \ttindex{build\_DofMaps} (stored in {\tt /Lib/Assembly}) in the following way \\
+
+\noindent {\tt >> Elem2Dof = build\_DofMaps(Mesh,EDofs,CDofs);} \\
+
+ The Dirichlet boundary conditions are incorporated by \\
+
+\noindent {\tt >> [U,FreeDofs] = \ttitindex{assemDir\_hp}(Mesh,Elem2Dof,BdFlag,QuadRule, ... \\
+Shap,FHandle,FParam);} \\
+
+ where {\tt U} is a ($M+$dof)-by-$1$ matrix. In the first part of the program the contributions of the vertices are computed, the contributions of the linear vertex shape functions are substracted from the function values and then the contributions of the edge shape functions are extracted using the quadrature rule. \\
+
+\index{boundary conditions!Dirichlet boundary conditions|)}

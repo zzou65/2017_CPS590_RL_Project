@@ -1,0 +1,538 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Finite volume method %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Finite Volume Method} \label{chapt:fvm_conv_diff}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% convection/diffusion equations %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Finite Volume Code for Solving Convection/Dif\-fusion Equations} \label{sect:fvm_conv_diff}
+
+This section details code written for the \LIBNAME library during
+the summer of 2007 by Eivind Fonn, for solving convection/diffusion equations
+using the Finite Volumes approach.
+
+\subsection{Background}
+
+The equation in question is
+\[ -\nabla\cdot(k\nabla u) + \nabla\cdot(cu) + ru = f \]
+on some domain $\Omega\subset\mathbb{R}^2$. Here, $k,r,f:\Omega\to\mathbb{R}$,
+and $c:\Omega\to\mathbb{R}^2$. $k$ is the diffusivity and should be positive 
+everywhere. $c$ is the velocity field.
+
+In addition to the above, one can specify Dirichlet and Neumann boundary
+conditions on various parts of $\partial\Omega$.
+
+\subsection{Mesh Generation and Plotting}
+
+The FV mesh generation builds upon FE meshes. Given a FE mesh, use the
+{\tt add\_MidPoints} function to add the data required for the dual mesh: \\
+
+\noindent{\tt >> mesh = add\_MidPoints\index{add\_MidPoints@{\tt add\_MidPoints}}(mesh,method);} \\
+
+{\tt method} is a string specifying which dual mesh method to use. The two
+options are {\tt barycentric} and {\tt orthogonal}. If {\tt method}
+is not specified, the {\tt barycentric} method will be used. For the
+{\tt orthogonal} method, the mesh cannot include any obtuse triangles, and
+if any such triangle exists, an error will occur.
+
+The full mesh can be plotted using the following call: \\
+
+\noindent{\tt >> plot\_Mesh\_LFV(mesh);} \index{plot\_Mesh\_LFV@{\tt plot\_Mesh\_LFV}}
+
+
+\subsection{Local computations}
+
+As in the case of finite elements the local stiffness matrix is computed for every element. This is done in three different functions, which will be discussed below
+
+\subsubsection{Diffusion term}
+
+In the function \texttt{STIMA\_GenLapl\_LFV} the local stiffness matrix comming from the diffusive term $-\nabla\cdot(k\nabla u)$ is computed. The code can be found below.
+
+\begin{lstlisting}
+function aLoc = STIMA_GenLapl_LFV(vertices,midPoints,...
+      center,method,bdFlags,kHandle,varargin)
+%   Copyright 2007-2007 Eivind Fonn
+%   SAM - Seminar for Applied Mathematics
+%   ETH-Zentrum
+%   CH-8092 Zurich, Switzerland
+
+% Compute required coefficients
+
+m = zeros(3,3);
+m(1,2) = norm(midPoints(1,:)-center);
+m(1,3) = norm(midPoints(3,:)-center);
+m(2,3) = norm(midPoints(2,:)-center);
+m = m + m';
+
+mu = zeros(3,3);
+mu(1,2) = kHandle((midPoints(1,:)+center)/2);
+mu(1,3) = kHandle((midPoints(3,:)+center)/2);
+mu(2,3) = kHandle((midPoints(2,:)+center)/2);
+mu = mu + mu';
+
+mum = mu.*m;
+
+sigma = zeros(3,2);
+sigma(1,:) = confw(novec(vertices([2 3],:)),vertices(1,:)-vertices(2,:));
+sigma(2,:) = confw(novec(vertices([1 3],:)),vertices(2,:)-vertices(3,:));
+sigma(3,:) = confw(novec(vertices([1 2],:)),vertices(3,:)-vertices(1,:));
+sigma(1,:) = sigma(1,:)/trialtv(vertices);
+sigma(2,:) = sigma(2,:)/trialtv([vertices(2,:);vertices([1 3],:)]);
+sigma(3,:) = sigma(3,:)/trialtv([vertices(3,:);vertices(1:2,:)]);
+
+% Compute stiffness matrix
+
+aLoc = zeros(3,3);
+for i=1:3
+   for j=1:3
+      % Calculate aLoc(i,j)
+      for l=[1:(i-1) (i+1):3]
+         aLoc(i,j) = aLoc(i,j) -...
+         mum(i,l)*dot(sigma(j,:),...
+           confw(novec([midPoints(midpt([i l]),:);center]),...
+           vertices(l,:)-vertices(i,:)));
+      end
+   end
+end
+	
+% Helping functions
+
+function s = midpt(idx)
+   idx = sort(idx);
+   if idx==[1 2]
+      s = 1;
+   elseif idx==[2 3]
+      s = 2;
+   else
+      s = 3;
+   end
+end
+
+function v = confw(v,t)
+   if dot(t,v)<0
+      v = -v;
+   end
+end
+
+function out = novec(v)
+   out = v(2,:)-v(1,:);
+   if norm(out) ~= 0
+      out = [-out(2) out(1)]/norm(out);
+   end
+end
+
+function out = trialtv(v)
+	out = norm(v(2,:)-v(1,:) + ...
+	      dot(v(3,:)-v(2,:),v(1,:)-v(2,:))/...
+	      (norm(v(3,:)-v(2,:))^2)*(v(3,:)-v(2,:)));
+end
+
+end
+\end{lstlisting}
+
+In the lines 10-14 the lengths of the pieces of the dual mesh on the current element are computed. In the lines 16-20 the approximation of the function $k$ on the boundary of the dual element is computed. The lines 24-30 compute the gradient of the basis functions on the current element. Finally the stiffness matrix is computed in the lines 34-45. Therefore the approximation of the integrals over the pieces of boundary of the dual mesh are added using the computed gradients of the basis functions.
+
+In the lines 47-77 helping functions are implemented. They are used to compute the gradient and to find the correct number of the midpoint lying on an edge.
+
+For the discretization of the convective term the function \texttt{STIMA\_GenGrad\_LFV} is used. The code of which can be found below.
+
+\begin{lstlisting}
+function aLoc = STIMA_GenGrad_LFV(vertices,midPoints,center,method,...
+		bdFlags,cHandle,kHandle,rHandle,conDom,varargin)
+%   Copyright 2007-2007 Eivind Fonn
+%   SAM - Seminar for Applied Mathematics
+%   ETH-Zentrum
+%   CH-8092 Zurich, Switzerland
+
+% Compute required coefficients
+
+m = zeros(3,3);
+m(1,2) = norm(midPoints(1,:)-center);
+m(1,3) = norm(midPoints(3,:)-center);
+m(2,3) = norm(midPoints(2,:)-center);
+m = m + m';
+
+qr = gauleg(0, 1, 4, 1e-6);
+c = zeros(3,2);
+for i=1:length(qr.w)
+    c(1,:) = c(1,:) + qr.w(i)*cHandle(midPoints(1,:)+...
+       	qr.x(i)*(center-midPoints(1,:)));
+    c(2,:) = c(2,:) + qr.w(i)*cHandle(midPoints(2,:)+...
+       	qr.x(i)*(center-midPoints(2,:)));
+    c(3,:) = c(3,:) + qr.w(i)*cHandle(midPoints(3,:)+...
+       	qr.x(i)*(center-midPoints(3,:)));
+end
+
+gamma = zeros(3,3);
+gamma(1,2) = dot(confw(novec([midPoints(1,:); center]),...
+	vertices(2,:)-vertices(1,:)),c(1,:));
+gamma(2,3) = dot(confw(novec([midPoints(2,:); center]),...
+	vertices(3,:)-vertices(2,:)),c(2,:));
+gamma(1,3) = dot(confw(novec([midPoints(3,:); center]),...
+	vertices(3,:)-vertices(1,:)),c(3,:));
+gamma = gamma - gamma';
+
+if conDom
+    mu = ones(3,3);
+    mu(1,2) = kHandle((midPoints(1,:)+center)/2);
+    mu(2,3) = kHandle((midPoints(2,:)+center)/2);
+    mu(1,3) = kHandle((midPoints(3,:)+center)/2);
+    mu = mu + mu';
+
+    d = zeros(3,3);
+    d(1,2) = norm(vertices(1,:)-vertices(2,:));
+    d(2,3) = norm(vertices(2,:)-vertices(3,:));
+    d(1,3) = norm(vertices(3,:)-vertices(1,:));
+    d = d + d';
+
+    z = gamma.*d./mu;
+    r = zeros(3,3);
+    for i=1:3, for j=1:3
+        r(i,j) = rHandle(z(i,j));
+    end; end;
+else
+    r = ones(3,3)/2;
+end
+
+a = m.*gamma.*r;
+b = m.*gamma;
+
+% Compute stiffness matrix
+
+aLoc = b'-a';
+
+for i=1:3
+	aLoc(i,i) = sum(a(i,:));
+end
+
+aLoc = aLoc';
+
+% Helping functions
+
+function v = confw(v,t)
+	if dot(v,t)<0
+		v = -v;
+	end
+end
+
+function out = novec(v)
+	out = v(2,:)-v(1,:);
+        if norm(out) ~= 0
+            out = [-out(2) out(1)]/norm(out);
+        end
+end
+	
+end
+\end{lstlisting}
+
+In the lines 10-14 the lengths of the pieces of the dual mesh on the current element are computed. 
+
+
+
+\subsection{Assembly}
+
+Assembly of the stiffness matrices and load vector is done much the same way
+as in FE, i.e. assemble the stiffness matrices term-by-term, sum them up to get
+the full matrix. Assemble the load vector in the normal way, then incorporate
+Neumann boundary data, followed by Dirichlet boundary data.
+
+For the lazy, there is a wrapper function for all of the above: \\
+
+\noindent{\tt >> [A,U,L,fd] = assemMat\_CD\_LFV(mesh,k,c,r,d,n,f,cd,out);} \index{assemMat\_CD\_LFV@{\tt assemMat\_CD\_LFV}} \\
+
+This function assembles all the matrices and vectors required at once, without
+any hassle. Here follows a list of the input arguments:
+
+\begin{itemize}
+\item {\tt mesh} The mesh struct (see last section).
+\item {\tt k} Function handle for the $k$-function.
+\item {\tt c} Function handle for the $c$-function.
+\item {\tt r} Function handle for the $r$-function.
+\item {\tt d} Function handle for the Dirichlet boundary data.
+\item {\tt n} Function handle for the Neumann boundary data.
+\item {\tt f} Function handle for the $f$-function.
+\item {\tt cd} If equal to 1, specifies that the problem is convection-dominated,
+and that appropriate upwinding techniques should be applied. If 0, specifies
+that the problem is diffusion-dominated. If left out, the program itself will
+determine whether the problem is convection- or diffusion-dominated.
+\item {\tt out} If equal to 1, the program will write output to the console.
+This is useful for large meshes, to keep track of the program.
+\end{itemize}
+
+If any of the function handles are left out or set equal to the empty matrix, 
+it is assumed they are zero and will play no part.
+
+The output are as follows:
+
+\begin{itemize}
+\item {\tt A} The stiffness matrix.
+\item {\tt U} The solution vector, containing Dirichlet boundary data.
+\item {\tt L} The load vector.
+\item {\tt fd} A vector with the indices of the free nodes.
+\end{itemize}
+
+From the above, the solution can be obtained by: \\
+
+\noindent{\tt >> U(fd) = A(fd,fd)$\backslash$L(fd);} \\
+
+The solution vector {\tt U} contains the approximate values of the solution $u$
+at the nodes given in the mesh.
+
+\subsection{Error Analysis}
+
+Given a mesh {\tt mesh}, a FV solution vector {\tt U} and a function handle 
+{\tt u} to the exact solution, the error can be measured in three different
+norms ($\|\cdot\|_1$, $\|\cdot\|_2$ and $\|\cdot\|_\infty$) using the 
+following calls: \\
+
+\noindent{\tt >> L1err = \ttindex{L1Err\_LFV}(mesh,U,qr,u);} \\
+\noindent{\tt >> L2err = \ttindex{L2Err\_LFV}(mesh,U,qr,u);} \\
+\noindent{\tt >> Linferr = \ttindex{LInfErr\_LFV}(mesh,U,u);} \\
+
+Here, {\tt qr} is any quadrature rule for the reference element, i.e.
+{\tt qr = \ttindex{P7O6}()}. 
+
+\subsection{File-by-File Description}
+
+Here follows a list of the files which were written as part of this project,
+and a description of each.
+
+\begin{itemize}
+\item {\tt Assembly/\ttitindex{assemDir\_LFV}.m} \\
+    {\tt [U,fd] = assemDir\_LFV(mesh,bdFlags,fHandle)} incorporates the
+    Dirichlet boundary conditions given by the function {\tt fHandle} in
+    the Finite Volume solution vector {\tt U}. {\tt fd} is a vector
+    giving the indices of the vertices with no Dirichlet boundary data
+    (i.e. the free vertices).
+\item {\tt Assembly/\ttitindex{assemLoad\_LFV}.m} \\
+    {\tt L = assemLoad\_LFV(mesh,fHandle)} assembles the load vector {\tt L}
+    for the data given by the function {\tt fHandle}.
+\item {\tt Assembly/\ttitindex{assemMat\_CD\_LFV}.m} \\
+    Wrapper function for assembly of convection/diffusion problems. See
+    above for description.
+\item {\tt Assembly/\ttitindex{assemMat\_LFV}.m}  \\
+    {\tt A = assemMat\_LFV(mesh,fHandle,varargin)} assembles the global
+    stiffness matrix {\tt A} from the local element contributions given
+    by the function {\tt fHandle} and returns it in a sparse format.
+    {\tt fHandle} is passed the extra input arguments given by {\tt varargin}.
+\item {\tt Assembly/\ttitindex{assemNeu\_LFV}.m} \\
+    {\tt L = assemNeu\_LFV(mesh,bdFlags,L,qr,fHandle)} incorporates Neumann
+    boundary conditions in the load vector {\tt L} as given by the function
+    {\tt fHandle}. {\tt qr} is any 1D quadrature rule. Note: In the general
+    diffusion problem $-\nabla\cdot(k\nabla u)=f$, with Neumann boundary data
+    $\frac{\partial u}{\partial n}=g$, the function $h$ you need to pass to
+    the Neumann assembly function is $h(x)=g(x)k(x)$.
+\item {\tt Element/\ttitindex{STIMA\_GenGrad\_LFV}.m} \\
+    {\tt A = STIMA\_GenGrad\_LFV(v,mp,cp,m,bd,cH,kH,rH,cd)} calculates the
+    local element contribution to the stiffness matrix from the term
+    $\nabla\cdot(cu)$. Here, {\tt v} is a 3-by-2 matrix giving the vertices
+    of the element, {\tt mp} and {\tt cp} give the midpoints on each of the
+    edges as well as the centerpoint (that is, the dual mesh geometry).
+    {\tt m} is the method used to generate the dual mesh (not used at the
+    current time), {\tt bd} are boundary flags for the edges (not used
+    at the current time). {\tt cH} is the $c$-function, {\tt kH} is the
+    $k$-function from the diffusion term and {\tt rH} is a proper upwinding
+    function. {\tt cd} is 1 if the problem is convection-dominated and 0
+    otherwise. {\tt kH} and {\tt rH} are only used if {\tt cd=1}. If not,
+    they need not be specified.
+\item {\tt Element/\ttitindex{STIMA\_GenLapl\_LFV}.m} \\
+    {\tt A = STIMA\_GenLapl\_LFV(v,mp,cp,m,bd,kH)} calculates the local
+    element contribution to the stiffness matrix from the term
+    $-\nabla\cdot(k\nabla u)$. The arguments are the same as above.
+\item {\tt Element/\ttitindex{STIMA\_ZerOrd\_LFV}.m} \\
+    {\tt A = STIMA\_ZerOrd\_LFV(v,mp,cp,m,bd,rH)} calculates the local
+    element contribution to the stiffness matrix from the term
+    $ru$. The arguments are the same as above, except that {\tt rH} is
+    the function handle for the $r$-function.
+\item {\tt Errors/\ttitindex{L1Err\_LFV}.m} \\
+    {\tt e = L1Err\_LFV(mesh,U,qr,fHandle)} calculates the discretization
+    error in the norm $\|\cdot\|_1$, between the finite volume approximation
+    given by {\tt U} (the solution vector), and the exact solution given by
+    the function {\tt fHandle}. {\tt qr} is any appropriate quadrature rule
+    on the reference element.
+\item {\tt Errors/\ttitindex{L2Err\_LFV}.m} \label{L2Err_LFV} \\
+    {\tt e = L2Err\_LFV(mesh,U,qr,fHandle)} calculates the discretization
+    error in the norm $\|\cdot\|_2$. All the arguments are as above.
+\item {\tt Errors/\ttitindex{LInfErr\_LFV}.m} \label{LInfErr_LFV} \\
+    {\tt e = LInfErr\_LFV(mesh,U,fHandle)} calculates the discretization
+    error in the norm $\|\cdot\|_\infty$. All the arguments are as above.
+\item {\tt MeshGen/\ttitindex{add\_MidPoints}.m} \\
+    {\tt mesh = add\_MidPoints(mesh,method)} incorporates the dual mesh
+    data required for the finite volume method into the mesh {\tt mesh}.
+    {\tt method} may be either {\tt 'barycentric'} or {\tt 'orthogonal'}.
+    See earlier description.
+\item {\tt Plots/\ttitindex{plot\_Mesh\_LFV}.m} \\
+    {\tt plot\_Mesh\_LFV(mesh)} plots the base mesh and the dual mesh.
+\end{itemize}
+
+
+\subsection{Driver routines}
+
+The driver routines for solving convection diffusion equations can be found in the folder \texttt{/Examples/FVOL}. There are $3$ different example problems implemented, which we shall discuss in more detail. The files \texttt{exp\_*} are functions, which solve the problems for the given input parameters. The functions \texttt{exp\_run\_*} contain executeable code and call the corresponding \texttt{exp\_*} function to solve the problem for different settings. Below the code of \texttt{exp\_run\_1} is included.
+
+\subsubsection{Example 1}
+
+\begin{lstlisting}
+exp1_epsrange = [1e-4 5e-4 1e-3 5e-3 1e-2 5e-2 1e-1 5e-1];
+refrange = 1:6;
+exp1_meshes = [];
+exp1_solutions = [];
+exp1_errors_L1 = [];
+exp1_errors_L2 = [];
+exp1_errors_Linf = [];
+exp1_hrange = [];
+
+for r=1:size(refrange,2)
+    for e=1:size(exp1_epsrange,2)
+        disp(['Running test ' num2str((e-1)+...
+              size(exp1_epsrange,2)*(r-1)+1) ' of ' ...
+              num2str(size(exp1_epsrange,2)*size(refrange,2))]);
+        [errs, mw, msh, u] =...
+              exp_1(exp1_epsrange(e), refrange(r), 0, 0);
+        exp1_errors_L1(e,r) = errs(1);
+        exp1_errors_L2(e,r) = errs(2);
+        exp1_errors_Linf(e,r) = errs(3);
+        exp1_solutions(e,r).sol = u;
+    end
+
+    exp1_meshes(r).Coordinates = msh.Coordinates;
+    exp1_meshes(r).Elements = msh.Elements;
+    exp1_meshes(r).ElemFlag = msh.ElemFlag;
+    exp1_meshes(r).Edges = msh.Edges;
+    exp1_meshes(r).Vert2Edge = msh.Vert2Edge;
+    exp1_meshes(r).Max_Nodes = msh.Max_Nodes;
+    exp1_meshes(r).BdFlags = msh.BdFlags;
+    exp1_meshes(r).CenterPoints = msh.CenterPoints;
+    exp1_meshes(r).Type = msh.Type;
+    exp1_meshes(r).MidPoints = msh.MidPoints;
+    exp1_hrange(r) = mw;
+end
+
+    
+
+save 'exp1_lfv.mat' exp1_*
+\end{lstlisting}
+
+There are two loops that start in the lines 10 and 11 control the variable $\epsilon$ and the number of mesh refinements respectively. A call to the function \texttt{exp\_1} in line 15 computes the finite volume solution of the equation
+\begin{equation}
+ -\epsilon\Delta u + u_x = 1,
+\end{equation}
+on the triangle $\Omega = \{(x,y)\;|\;0\leq x\leq1,\;-x\leq y\leq x\}$. In every step different values for $\epsilon$ and different mesh widths (refinement steps) are handed to \texttt{eps\_1}. The other two input parameters are flags, which are here not set to suppress output and plotting. The code of the function \texttt{eps\_1} will be explained in more detail below.
+
+In the last line all the results including errors, solution and mesh information are saved to the file \texttt{exp1\_lfv.mat}.
+
+Now we shall discuss the solver routine for this example, the code can be found below.
+
+\begin{lstlisting}
+function [errs, mw, msh, U] = exp_1(eps, nRef, plotting, output)
+if nargin < 2 || isempty(nRef)
+    nRef = 0;
+end
+if nargin < 3 || isempty(plotting)
+    plotting = 0;
+end
+if nargin < 4 || isempty(output)
+    output = 0;
+end
+    
+out('Generating mesh.');
+msh = load_Mesh('mesh_exp_1_coords.dat', 'mesh_exp_1_elements.dat');
+msh.ElemFlag = ones(size(msh.Elements,1),1);
+msh = add_Edges(msh);
+loc = get_BdEdges(msh);
+msh.BdFlags = zeros(size(msh.Edges,1),1);
+msh.BdFlags(loc) = -ones(size(loc));
+for i=1:nRef
+    msh = refine_REG(msh);
+end
+msh = add_MidPoints(msh, 'barycentric');
+
+u = @(x,varargin)(x(1)-(exp(-(1-x(1))/eps)-...
+	exp(-1/eps))/(1-exp(-1/eps)));
+k = @(x,varargin)eps;
+c = @(x,varargin)[1 0];
+r = [];
+d = @(x,varargin)(u(x,varargin));
+n = [];
+f = @(x,varargin)1;
+conDom = 1;
+
+[A, U, L, fd] =...
+    assemMat_CD_LFV(msh, k, c, r, d, n, f, conDom, output);
+  
+out('Solving system.');
+U(fd) = A(fd,fd)\L(fd);
+
+if plotting 
+    out('Plotting.');
+    plot_LFE(U, msh);
+end
+
+out('Calculating errors.');
+errs = [L1Err_LFV(msh, U, P7O6(), u);...
+     L2Err_LFV(msh, U, P7O6(), u); LInfErr_LFV(msh, U, u)];
+out(['Discretization errors: ' num2str(errs(1)) ',...
+    ' num2str(errs(2)) ', ' num2str(errs(3)) '.']);
+
+out('Calculating meshwidth.');
+mw = get_MeshWidth(msh);
+
+
+% Helping functions
+function out(text, level)
+    if output
+        if nargin < 2 || isempty(level),
+            level = 1;
+        end
+        for i=1:level
+            text = ['- ' text];
+        end
+        disp([text]);
+    end
+end
+end
+
+\end{lstlisting}
+
+\begin{itemize}
+ \item lines 2-10: the output and plotting flags are set, if they are not part of the input already
+ \item lines 12-22: generate and refine mesh, in line 22 the midpoints for the finite volume method are computed
+ \item lines 23-32: define all the input variables for the finite volume method, i.e. the functions for defining the differential equation and for defining the Dirichlet and Neumann data; the variable \texttt{conDom} is a flag specifying if the problem is convergence dominated
+ \item lines 40-45: plot the solution if the \texttt{plotting} flag is set
+ \item lines 47-54: compute the discretization errors and print them in case the flag \texttt{output} is set
+ \item lines 57-68: the function \texttt{out} controls the output in the command window
+\end{itemize}
+
+Furthermore there the function \texttt{main\_1} solves uses the \texttt{eps\_1} function to solve one example problem. The input parameters can be given to the function in the beginning. The solution and the underlying mesh will be plotted.
+
+\subsubsection{Example 2}
+
+The structure of Example 2 is the same as in the first one. The equation that is solved is given by
+\begin{equation}
+ -\epsilon\Delta u + u_x + u_y= 0,
+\end{equation}
+with dirichlet boundary condition on the square $[0,1]^2$. The exact solution we are looking for is in this case given by
+\begin{equation}
+ u(x,y)=
+ \begin{cases}
+  1 \qquad 	&\text{if $x>y$}\\
+  0.5		&\text{if $x=y$}\\
+  0		&\text{if $x<y$}.
+ \end{cases}
+\end{equation}
+On the boundary Dirichlet conditions are set.
+
+\subsubsection{Example 3}
+
+For the third example there is no wrapper function \texttt{eps\_3\_run} but only the function \texttt{eps\_3}, which solves the problem
+\begin{equation}
+ -\Delta u + \nabla\cdot(u\nabla\Psi) = 0,
+\end{equation}
+where $\Psi=\Psi(r)=\tfrac{1}{1+e^{a(r-1)}}$. The radius is given by $r=\sqrt{x^2+y^2}$ and the computational domain is given by $[0,1]^2$. The last two input parameters of the function are used to control plotting and output. The input variable \texttt{a} is needed in the definition of the function $\Psi$. The variable \texttt{nRef} determines the number of refinement steps.
+
+
+For this example there is, as for the experiments before the function \texttt{main\_3}, which solves the problem for the parameters specified in the beginning of the file.

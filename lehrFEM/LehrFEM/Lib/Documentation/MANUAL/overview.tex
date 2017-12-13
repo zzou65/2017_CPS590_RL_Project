@@ -1,0 +1,55 @@
+%%%%%%%%%%%%%%%%%%%%
+%%%%% Overview %%%%%
+%%%%%%%%%%%%%%%%%%%%
+
+\chapter*{Overview} \label{chap:overview}
+
+Folders and files in \LIBNAME: \\
+
+\begin{tabular}{p{4cm}|p{3.3cm}|p{2.9cm}|c}
+	operations & folder & file names & chapter \\ \hline
+
+	mesh generation & {\tt /Lib/MeshGen} & {\tt init\_Mesh} etc. & \ref{sect:MGEN}\\
+	mesh refinements & {\tt /Lib/MeshGen} & {\tt refine\_REG} etc. & \ref{sect:MR} \\
+	load mesh & {\tt /Lib/MeshGen} & {\tt load\_Mesh} & \ref{ssect:load_save_mesh} \\
+	save mesh & {\tt /Lib/MeshGen} & {\tt save\_Mesh} & \ref{ssect:load_save_mesh} \\
+	plot mesh & {\tt /Lib/Plots} & {\tt plot\_Mesh\_*} & \ref{ssect:plot_mesh} \\ \hline
+
+	shape functions & {\tt /Lib/Element} & {\tt shap\_*} & \ref{chap:shap_fct} \\
+	gradients of shape functions & 	{\tt /Lib/Element} & {\tt grad\_shap\_*} & \ref{chap:shap_fct} \\ 
+	plot shape functions & {\tt /Examples/PlotShap} resp. {\tt /Lib/Plots} & {\tt main\_Shap\_*} resp. {\tt plot\_Shap\_*} & \ref{sect:shap_plot} \\ \hline
+
+	quadrature rules & {\tt /Lib/QuadRules} & {\tt P*O*} etc. & \ref{chap:quad_rule} \\ \hline
+
+	element stiffness matrices & {\tt /Lib/Element} & {\tt STIMA\_*} & \ref{sect:stima} \\
+	element mass matrices & {\tt /Lib/Element} & {\tt MASS\_*} & \ref{sect:mass} \\
+	element load vectors & {\tt /Lib/Element} & {\tt LOAD\_*} & \ref{sect:load} \\ \hline
+
+	assembly of stiffness/mass matrices & {\tt /Lib/Assembly} & {\tt assemMat\_*} & \ref{sect:assem_mat} \\
+%	assembly of stiffness/mass matrices for DG boundary edge contributions & {\tt /Lib/Assembly} & {\tt assemMat\_Bnd\_*} & \\
+%	assembly of stiffness/mass matrices for DG interior edge contributions & {\tt /Lib/Assembly} & {\tt assemMat\_Inn\_*} & \\
+	assembly of load vectors & {\tt /Lib/Assembly} & {\tt assemLoad\_*} & \ref{sect:assem_load} \\ \hline
+%	assembly of load vectors for DG boundary contributions & {\tt /Lib/Assembly} & {\tt assemLoad\_Bnd\_*} & \\
+%	assembly of load vectors for DG volume contributions & {\tt /Lib/Assembly} & {\tt assemLoad\_Vol\_*} & \\ \hline
+
+	incorporation of Dirichlet boundary conditions & {\tt /Lib/Assembly} & {\tt assemDir\_*} & \ref{sect:assem_dir}\\
+	incorporation of Neumann boundary conditions & {\tt /Lib/Assembly} & {\tt assemNeu\_*} & \ref{sect:assem_neu}\\ \hline
+
+	solvers & {\tt /Lib/Solvers} & {\tt *\_solve} etc. & \\ \hline
+
+	plot of solution & {\tt /Lib/Plots} & {\tt plot\_*} & \ref{sect:plot} \\
+	plot section & {\tt /Lib/Plots} & {\tt plotLine\_*} & \ref{sect:plot_line} \\
+	plot contours & {\tt /Lib/Plots} & {\tt contour\_*} & \ref{sect:plot_contour} \\ \hline
+
+	$H^1$ discretization errors & {\tt /Lib/Errors} & {\tt H1Err\_*} & \ref{sect:h1_err} \\
+	$H^1_s$ discretization errors & {\tt /Lib/Errors} & {\tt H1SErr\_*} & \ref{sect:h1s_err} \\
+	$L^1$ discretization errors & {\tt /Lib/Errors} & {\tt L1Err\_*} & \ref{sect:l1_err} \\
+	$L^2$ discretization errors & {\tt /Lib/Errors} & {\tt L2Err\_*} & \ref{sect:l2_err} \\
+	$L^{\infty}$ discretization errors & {\tt /Lib/Errors} & {\tt LInfErr\_*} & \ref{sect:linf_err} \\ 
+	$S^1$ discretization errors & {\tt /Lib/Errors} & {\tt HCurlSErr\_*} &  \\ \hline
+
+	error estimates & {\tt /Lib/ErrEst} & {\tt ErrEst\_*} & \\ 
+	error distributions & {\tt /Lib/ErrorDistr} & {\tt H1ErrDistr\_*} and {\tt L2ErrDistr\_*} & \\ \hline
+
+	examples & {\tt /Examples} & {\tt main\_*} etc. &
+\end{tabular} \\

@@ -1,0 +1,5 @@
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateQFE(8,[0.8],'exact','Cos1',-1); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateQFE(8,[0.8],'exact','Cos2',-1); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateQFE(8,[0.8],'exact','Cos3',-1); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateQFE(8,[0.8],'exact','Cos4',-1); exit;" > log.txt &
+matlab -nodesktop -nodisplay -r "cd ../../; startup; pwd ;cd Examples/ScalarSemiLagrangian/; main_SLPureCircErrorRateQFE(8,[0.8],'exact','Cos5',-1); exit;" > log.txt &

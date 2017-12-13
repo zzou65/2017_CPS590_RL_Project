@@ -1,0 +1,11 @@
+% List of vertices
+%
+%   User  :  MEURY
+%   Date  :  13-Jun-2005 11:18:25
+%
+%   The first column contains the global index of each vertex.
+%
+
+1      -1.000000e+00  -1.000000e+00
+2      +1.000000e+00  -1.000000e+00
+3      +0.000000e+00  +1.000000e+00

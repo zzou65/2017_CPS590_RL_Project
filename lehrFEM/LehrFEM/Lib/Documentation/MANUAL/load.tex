@@ -1,0 +1,130 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Element load vectors %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Element Load Vectors} \label{sect:load} \index{element load vector|(}
+
+For the standard continuous galerkin discretization, i.e. continuous solution in the node points there is no element load vector computed. The computation of the whole vector is done in the assembly file as described in Section \ref{sect:assem_load}.
+
+For the discontinuous galerkin method additional boundary terms occur on the dirichlet boundary. The test space is in this case not only contains functions that vanish on the this part of the boundary. For example for the Laplacian operator and lagrangian finite elements of order $p$ the computations of the volume part are done in the function {\tt @LOAD\_Vol\_PDG} and the boundary contributions can be obtained by using {\tt @LOAD\_Lapl\_Bnd\_PDG}.\\
+
+Note that generally -- i.e. for the easy cases described in section \ref{sect:assem_load}\index{assembling!load vector}, p. \pageref{sect:assem_load} -- the computation of the element load vectors is even done \emph{within} the {\tt assemLoad}-functions. The following element load vectors are just needed for the discontinuous Galerkin method.
+
+
+%% Boundary contributions %%
+
+\subsection{Boundary Contributions} \index{element load vector!boundary contributions|(}
+
+The boundary contributions for the discontinuous Galerkin method come from the Dirichlet boundary data. The test functions are in general not zero on the boundary, therefore an additional integral over all boundary Dirichlet edges occurs. For the DG method implemented in LehrFEM only pure Dirichlet boundary data is allowed.
+
+\subsubsection{Input Arguments} \label{sssect:load_bnd_in}
+
+ The input arguments {\tt Edge}, {\tt Normal} and {\tt BdFlag} are described in table \ref{tab:load_in_mesh}.
+
+\begin{table}[htb]
+  \begin{tabular}{p{1.5cm}p{9.5cm}}
+    \ttindex{Edge} & {\small $2$-by-$2$ matrix whose rows contain the start and end node of the current edge} \\
+    \ttindex{Normal} & {\small $1$-by-$2$ matrix which contains the interior unit normal with respect to the current edge {\tt Edge}} \\
+    \ttindex{BdFlag} & {\small integer which denotes the boundary flag of the current edge}
+  \end{tabular}
+  \caption{Mesh input arguments for the computation of the element load vector}
+  \label{tab:load_in_mesh}
+\end{table}
+
+ {\tt BdFlag} is only needed for some functions handles. On the other hand some parametrization of the edge may be supplied by {\tt Params} (see documentation for more details). The struct {\tt Data} contains the left and right hand side element data, see table \ref{tab:load_in_data}.
+
+\begin{table}[htb]
+  \begin{tabular}{p{1.5cm}p{9.5cm}}
+    \ttindex{Element} & {\small integer specifying the neighbouring element} \\
+    \ttindex{ElemData} & {\small structure contains the fields {\tt nDofs} (number of degrees of freedom on the current element) and {\tt Dir} ($P$-by-$2$ matrix containing the propagation directions of the plane wave basis functions in its rows)} \\
+    \ttindex{Vertices} & {\small $3$-by-$2$ or $4$-by-$2$ matrix specifying the vertices of the neighbouring element} \\
+    \ttindex{EdgeLoc} & {\small integer specifying the local edge number on the neighbouring element} \\
+    \ttindex{Match} & {\small integer specifying the relative orientation of the edge w.r.t. the orientation of the neighbouring element}
+  \end{tabular}
+  \caption{Required {\tt Data} structure}
+  \label{tab:load_in_data}
+\end{table}
+
+ The right hand side is given as function handle, e.g. {\tt FHandle}. It should take at least the argument {\tt x}. Furthermore, a quadrature rule\index{quadrature rules} \ttindex{QuadRule} is needed for the calculation of the integrals. Some additional constants and parameters may be required depending on the right hand side and equation they are used for.
+
+\subsubsection{Output}
+
+ The outputs are $l$-by-$1$ vectors {\tt Lloc\_bnd} where $l$ again are the local degrees of freedom on the current element. The $j$-th element corresponds to the $j$-th contribution $f(b^j_N)$ of the current element. \\
+
+ The local boundary terms are assembled by {\tt assemLoad\_Bnd}-functions stored in {\tt /Lib/Assembly}.
+
+\subsubsection{Examples}
+
+\begin{itemize}
+% LOAD\_Bnd\_DGLFE
+\item \ttitindex{LOAD\_Bnd\_DGLFE} computes the entries of the element load vector for the boundary load data on discontinuous linear finite elements. It is called by \\
+
+\noindent {\tt >> Lloc\_bnd = LOAD\_Bnd\_DGLFE(Edge,Normal,BdFlag,Data, ... \\
+QuadRule,s,SHandle,FHandle,varargin);} \\
+
+ where the integer {\tt s} specifies wheter the diffusive fluxes are discretized in a symmetric or anti-symmetric way ($+1$ anti-symmetric, $-1$ symmetric), {\tt SHandle} is a function pointer to the edge weight function and {\tt FHandle} a function pointer to the load data. \\
+
+% LOAD\_Dir\_Bnd\_PWDG
+\item \ttitindex{LOAD\_Dir\_Bnd\_PWDG} computes the entries of the element load vector corresponding to Dirichlet boundary conditions for discontinuous plane waves. It is called by \\
+
+\noindent {\tt >> Lloc\_bnd = LOAD\_Dir\_Bnd\_PWDG(Edge,Normal,Params,Data, ... \\
+QuadRule,omega,GHandle,GParam);} \\
+
+ {\tt GHandle} is a function handle for the impedence boundary conditions, {\tt omega} is the wave number of the Helholtz equation. \\
+
+% LOAD\_Lapl\_Bnd\_PDG
+\item \ttitindex{LOAD\_Lapl\_Bnd\_PDG} computes the entries of the element load vector for the boundary load data {\tt FHandle} using the shape functions given by the function handle {\tt Shap} and {\tt grad\_Shap} by \\
+
+\noindent {\tt >>  Lloc\_bnd = LOAD\_Lapl\_Bnd\_PDG(Edge,Normal,BdFlag,Data, ... \\ QuadRule,Shap,grad\_Shap,SHandle,FHandle,FParam);}
+\end{itemize}
+
+\index{element load vector!boundary contributions|)}
+
+
+%% Volume contributions %%
+
+\subsection{Volume Contributions} \index{element load vector!volume contributions|(}
+
+\subsubsection{Input Arguments}
+
+ In contrast to the boundary contributions {\tt Vertices} and {\tt ElemData} are also needed for the computation, but not stored in the struct {\tt Data} but stand-alone. As usual, {\tt Vertices} is $3$-by-$2$ or $4$-by-$2$ matrix. The struct {\tt ElemData} is described in table \ref{tab:elem_data}.
+
+\begin{table}[htb]
+  \begin{tabular}{p{1cm}p{10cm}}
+    \ttitindex{nDof} & {\small number of degrees of freedom on the current element} \\
+    \ttitindex{Dir} & {\small $P$-by-$2$ matrix containing the propagation directions of the plane wave basis functions in its rows}
+%    \ttitindex{Geom} & {\small \textcolor{pink}{???}}
+  \end{tabular}
+  \caption{Basic \ttitindex{ElemData} data structure}
+  \label{tab:elem_data}
+\end{table}
+
+ The rest of the input arguments are pretty much the same as mentioned in \ref{sssect:load_bnd_in}.
+
+\subsubsection{Output}
+
+ The outputs are also $l$-by-$1$ vectors {\tt Lloc\_vol}. The $j$-th element corresponds to the $j$-th contribution $f(b^j_N)$ on the current element.
+
+ The local volume terms are assembled by{\tt assemLoad\_Vol}-functions stored in {\tt /Lib/Assembly}.
+
+\subsubsection{Examples}
+
+\begin{itemize}
+% Ex. LOAD\_EnergyProj\_Vol\_PWDG
+\item \ttitindex{LOAD\_EnergyProj\_Vol\_PWDG} computes the volume contributions to the element load vector for discontinuous plane waves with right hand side given by an energy-norm scalar product. It is called by \\
+
+\noindent {\tt >> Lloc\_vol = LOAD\_EnergyProj\_Vol\_PWDG(Vertices,ElemData, ... \\
+QuadRule,omega,UHandle,DUHandle,varargin);} \\
+
+ {\tt UHandle} and {\tt DUHandle} are function handles for the load data and its gradient, {\tt omega} is the wave number of the plane waves. The functions calls \ttindex{shap\_BFE} and \ttindex{grad\_shap\_BFE} as well as the quadrature rules \ttindex{P3O3} and \ttindex{P7O6}. \\
+
+% Ex. LOAD\_Vol\_DGLFE
+\item \ttitindex{LOAD\_Vol\_DGLFE} computes the entries of the element load vector for the volume load data for discontinuous linear elements. The function \linebreak
+\ttindex{shap\_DGLFE} is called for the calculaction of the values of the shape functions. The $3$-by-$1$ vector {\tt Lloc\_vol} is created by \\
+
+\noindent {\tt >> Lloc\_vol = LOAD\_Vol\_DGLFE(Vertices,ElemFlag,QuadRule, ... \\
+FHandle,FParam);}
+\end{itemize}
+
+\index{element load vector!volume contributions|)}
+\index{element load vector|)}

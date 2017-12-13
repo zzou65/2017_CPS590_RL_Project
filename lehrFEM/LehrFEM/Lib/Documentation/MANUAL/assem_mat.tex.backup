@@ -1,0 +1,274 @@
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Assembling %%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Assembling} \label{chap:assem}
+
+% yet to be done: summarize input of assemMat and assemLoad, structure of programs and output (in case it is the same: delete beginning of both sections)
+
+ On the following pages the main assembling routines for the assembly of the global matrices and load vectors are summerized. Their job is to assembly the local element matrices and load vectors for various operators resp. right hand side given by function handles {\tt EHandle} and {\tt FHandle}. In finite elements it is common to consider the matrices and load vectors without including boundary conditions first. The boundary conditions are incorporated later.  The general input arguments (e.g. the required {\tt Mesh} data structure) and central ideas of the computations are condensed at the beginning of both sections. \\
+
+ The following finite elements are considered in this manual:
+\begin{itemize}
+	\item constant finite elements (1D and 2D)
+	\item linear finite elements (1D and 2D, also vector-valued)
+	\item bilinear finite elements (2D)
+	\item Crouzeix-Raviart finite elements (2D)
+	\item quadratic finite elements (2D)
+	\item Whitney 1-forms (2D, vector-valued)
+	\item $hp$ finite elements (1D and 2D)
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% assembling of matrices %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Assembling the Global Matrix} \label{sect:assem_mat} \index{assembling!global matrix|(}
+
+ The assembling of the stiffness and mass matrices in \LIBNAME is element-based. The local stiffness matrix of the element $K$ \ttindex{Aloc} is an $l$-by-$l$ matrix ($l =$ local degrees of freedom). By definition $\mathtt{Aloc}_{ij} = a(b_K^i,b_K^j)$, where $b_K^i$ denotes the local shape functions. The shape function $b_K^i$ is 1 on the local node $i$ and 0 in all the other nodes of the corresponding element, therefore it equals the global basis function $b^I$ restricted to the element $K$, where $I$ denotes the global label of the local node $i$. The bilinear form is defined by an integral over the computational domain which allows to compute $a(b^I,b^J)$ as sum of integrals over the elements. The value $a(b_K^i,b_K^j)$ is therefore one contributing summand to $a(b^I,b^J)$, where $I$ and $J$ are the global labels corresponding to the local nodes $i$ and $j$. The same computation strategy can be used to compute the mass matrix.
+
+The struct {\tt Mesh} contains information about its {\tt Coordinates}, {\tt Elements} and eventually contains additional element information in {\tt ElemFlag} (e.g. weights). The necessary details of this data structure are summed up in table \ref{tab:assem_mesh}.
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+	{\tt Coordinates} & {\small $M$-by-$2$ matrix specifying all vertex coordinates} \\
+	{\tt Elements} & {\small $N$-by-$3$ or $N$-by-$4$ matrix connecting vertices into elements} \\
+	\ttindex{ElemFlag} & {\small $N$-by-$1$ matrix specifying additional element information}
+  \end{tabular}
+  \caption{Mesh data structure\index{assembling!mesh data structure} for the assembling process (2D)}
+  \label{tab:assem_mesh}
+\end{table}
+
+The code of the function {\tt assemMat\_LFE} for linear finite elements can be found below.
+
+\begin{lstlisting}
+function varargout = assemMat_LFE(Mesh,EHandle,varargin)
+  % Initialize constants
+  
+  nElements = size(Mesh.Elements,1);
+  
+  % Preallocate memory
+  
+  I = zeros(9*nElements,1);  
+  J = zeros(9*nElements,1);  
+  A = zeros(9*nElements,1); 
+  
+  % Check for element flags
+  
+  if(isfield(Mesh,'ElemFlag')),
+    flags = Mesh.ElemFlag; 
+  else
+    flags = zeros(nElements,1);
+  end
+
+  % Assemble element contributions
+  
+  loc = 1:9;
+  for i = 1:nElements
+    
+    % Extract vertices of current element
+    
+    idx = Mesh.Elements(i,:);
+    Vertices = Mesh.Coordinates(idx,:);
+      
+    % Compute element contributions
+    
+    Aloc = EHandle(Vertices,flags(i),varargin{:});
+   
+    % Add contributions to stiffness matrix
+    
+    I(loc) = set_Rows(idx,3); % contains line number
+    J(loc) = set_Cols(idx,3); % contains column number
+    A(loc) = Aloc(:); % contains matrix entries
+    loc = loc+9;
+    
+  end
+  
+  % Assign output arguments
+  
+  if(nargout > 1)
+    varargout{1} = I;
+    varargout{2} = J;
+    varargout{3} = A;
+  else
+    varargout{1} = sparse(I,J,A);
+  end
+  
+return
+\end{lstlisting}
+
+The input argument \texttt{varargin} is directly passed on to the function handle {\tt EHandle} for the computation of the local contributions. Depending on the operator this input is needed or not. For example for the Laplacian with linear finite elements it is sufficient to call
+
+\noindent \verb!>> A = assemMat_LFE(Mesh,@STIMA_Lapl_LFE);!
+
+In general the possibilities to call the function can be found below.
+
+\noindent {\tt >> A = \ttindex{assemMat\_LFE}(Mesh,EHandle);} \\
+\noindent {\tt >> A = assemMat\_LFE(Mesh,EHandle,EParam);} \\
+\noindent {\tt >> [I,J,A] = assemMat\_LFE(Mesh,EHandle);} \\
+
+ Here {\tt A}, {\tt I} and {\tt J} are $E$-by-1 matrices where $E = l^2 \cdot N$. In the first two examples the matrix {\tt A} is returned in a sparse representation, in the latter case in an array representation. The programs \ttindex{set\_Rows} and \ttindex{set\_Cols} (lines 36,37) generate the row resp. column index set {\tt I} resp. {\tt J} used for the transformation of an element matrix into an array. \\
+
+The main steps in the computation are:
+\begin{itemize}
+	\item prealocating memory and defining constants (lines 4-22)
+	\item loop over all elements in {\tt Mesh} (lines 23-41)
+	\begin{itemize}
+		\item computing element contributions {\tt Aloc} using {\tt EHandle} (mostly seperate files for various operators in {\tt /Lib/Elements}, see section \ref{sect:stima}, p. \pageref{sect:stima}) (line 32)
+		\item adding these contributions to the global matrix \ttindex{A} (lines 36-38)
+	\end{itemize}
+\end{itemize}
+
+For the computation of the local contributions see chapter \ref{chap:local_comp}, p. \pageref{chap:local_comp}ff.
+
+
+%%% constant FE %%%
+
+\subsection{Constant Finite Elements} \index{constant finite elements!assembling of the global matrix}
+
+\subsubsection{.. in 1D}
+
+In this simplest case the output is a diagonal matrix created by \ttitindex{assemMat\_P0\_1D}. 
+% This assembly is only used in the case of the 1D wave equation with perfectly matched layer, and is applied to the element mass matrix {\tt MASS\_P0\_1D}. See {\tt /Examples/WaveEq/main\_PML\_1D}.
+
+\subsubsection{.. in 2D}
+
+For each element there is only one contribution. They are assembled in \linebreak
+\ttitindex{assemMat\_P0}. 
+% Besides {\tt LFE} and {\tt P1P0} the constant case {\tt P0} is used in the 2D wave equation with perfectly matched layer, see {\tt /Examples/WaveEq/main\_PML\_2D}.
+
+
+%%% linear FE %%%
+
+\subsection{Linear Finite Elements} \index{linear finite elements!assembling of the global matrix}
+
+\subsubsection{.. in 1D}
+
+ \ttitindex{assemMat\_P1\_1D} assembles the linear element contributions in 1D. The band matrix is updated in each run of the loop. It is called by \\
+
+\noindent {\tt >> A = assemMat\_P1\_1D(Coordinates,EHandle,EParam);}
+
+\subsubsection{.. in 2D}
+
+ On a linear finite element 9 contributions have to be computed, e.g. by the operator {\tt /Lib/Elements/STIMA\_Lapl\_LFE} in the Laplacian case as discussed above. Their local stiffness matrices are calculated by using barycentric coordinates. \\
+
+ In \ttitindex{assemMat\_LFE} the element contributions are assembled. Additional information in {\tt Mesh.ElemFlag} may be taken into account. \\
+
+% Linear finite elements are also used for the minimal surface problem (e.g. {\tt /Examples/MinimalSurface/minSurfNewton}) etc. \\
+
+\index{linear vector-valued finite elements!assembling of the global matrix}
+ In the vector-valued case there are 6 shape functions per element, hence 36 nodal contributions are assembled in \ttitindex{assemMat\_LFE2}.
+
+
+%%% bilinear FE %%%
+
+\subsection{Bilinear Finite Elements} \index{bilinear finite elements!assembling of the global matrix}
+
+ \ttitindex{assemMat\_BFE} assembles the element contributions by extracting the elements and its vertices from the mesh, computing the local matrices for the given operator {\tt EHandle} and merging them together. Each element consists of four vertices (the reference element is $[0,1]^2$) and four bilinear shape functions are hereon defined, hence 16 contributions per element are calculated.
+
+% The bilinear case is used for the heat equation and the Laplacian. In these cases the local element matrices are computed in {\tt STIMA\_Heat\_BFE} and {\tt STIMA\_Lapl\_BFE}. Both make use of the local bilinear shape functions {\tt shap\_BFE} and its gradients {\tt grad\_shap\_BFE} % (see \ref{ssect:shap_BFE}), hence the labelling.
+
+
+%%% Crouzeix-Raviart FE %%%
+
+\subsection{Crouzeix-Raviart Finite Elements} \index{Crouzeix-Raviart finite elements!assembling of the global matrix}
+
+ \ttitindex{assemMat\_CR} computes 9 contributions per triangular element and adds them to the global stiffness matrix. Since the Crouzeix-Raviart elements are connected to the midpoints of the edges, the additional information {\tt Mesh.Vert2Edge} is necessary in order to assign the edge number to two connected vertices of the triangle.
+
+% In {\tt /Examples/CR/main\_Lapl\_CR} the assembly is applied to {\tt STIMA\_Lapl\_CR}, the local element stiffness matrix for the Laplacian, which computes the matrix entries using barycentric coordinates.
+
+
+% \subsection{Assemble nodal FE contributions}
+
+
+%%% quadratic FE %%%
+
+\subsection{Quadratic Finite Elements} \index{quadratic finite elements!assembling of the global matrix}
+
+% {\tt assemMat\_PBD} -- quadradic contributions for parabolic boundary
+
+ There are 6 quadratic shape functions on one triangular element (3 connected to vertices and 3 to edges), hence there are 36 local element contributions which are assembled in \ttitindex{assemMat\_QFE}.
+
+% In {\tt /Examples/QFE\_LFE/main\_QFE} the assembly is applied to the {\tt STIMA\_Lapl\_QFE}, the element stiffness matrix for the Laplacian using quadratic finite elements. The matrix entries are computed by using barycentric coordinates. \textcolor{pink}{Where are the formulas for these computations from?}
+
+
+%%% Whitney 1-forms %%%
+
+\subsection{Whitney 1-Forms} \index{Whitney 1-forms!assembling of the global matrix}
+
+ Whitney 1-forms are 3 vector-valued shape functions, thus 9 contributions are computed locally. Additionally the edge orientations are determined to scale the element matrices. \\
+
+ The program \ttitindex{assemMat\_W1F} assembles then the global element matrix. Additional element information may be stored in the field {\tt Mesh.ElemFlag}. \\
+
+% Whitney 1-forms are used in the W1F finite element solver in {\tt Examples/W1F/main\_W1F} for the curl*$\mu$*curl operator in 2D, whose local stiffness matrix is computed in {\tt STIMA\_Curl\_W1F} and the mass matrix in {\tt MASS\_W1F} with weight $\mu$. \\
+
+Similarily, \ttitindex{assemMat\_WReg\_W1F} does the assembly for the weak regularization W1F finite element solver. There {\tt EHandle} is called with the 2D quadrature rule \ttindex{P7O6} (7 point Gauss quadrature rule of order 6, cf. \pageref{ssect:quad_po}).
+
+% In {\tt Examples/W1F/main\_WReg\_W1F} the operator is {\tt STIMA\_WReg\_W1F}.
+
+
+\subsection{$hp$ Finite Elements} \index{hpFEM@$hp$FEM!assembling of the global matrix}
+
+ \ttitindex{assemMat\_hp} assembles the $hp$FEM contributions. It is e.g. called by \\
+
+\noindent {\tt >> A = assemMat\_hp(Mesh,Elem2Dof,EHandle,EParam);} \\
+
+ where the struct \ttitindex{Elem2Dof} \label{elem2dof} describes the element to dof (degrees of freedom) mapping obtained from the routine \ttindex{build\_DofMaps}. The degrees of freedom are placed on elements according to the distance to the corner points, where singularities are expected. The distance of an element $T$ to the corner point $c$ denoted by $d(T,c)$ is measured by the minimal number edges needed to get a path from $c$ to any of the vertices of $T$. In this implementation the polynomial degree for the element $T$ is given by
+\begin{equation}
+  p_T = \min_{c \in C} (\max(3,d(T,c))),
+\end{equation}
+where $C$ denotes the set of all corner nodes. The degrees of freedom on the edges are computed as the minimum of the degrees of freedom on the neighboring elements.
+
+
+The data strut {\tt Elem2Dof} stores information about the local polynomial orders and the local edge orientations and contains the fields {\tt Elem2Dof}, {\tt EDofs}, {\tt CDofs}, {\tt tot\_EDofs} and {\tt tot\_CDofs} which are explained in detail in Table \ref{tab:elem2dof}. 
+
+\begin{table}[htb]
+  \begin{tabular}{p{2cm}p{9cm}}
+	{\tt EDofs} & {\small consists of 3 cells, which are related to the three local edges of the element; cell number $i=1,\ldots,3$ has the fields
+	\begin{itemize}
+	 \item {\tt Dofs}:  $N$ cells, which specify the labels of the degrees of freedom placed on the local edge $i$ of every element
+	 \item {\tt nDofs}:  $N$-by-$1$ matrix containing the number of degrees of freedom for the local edge $i$ of every element
+	 \item {\tt Dir}:  $N$-by-$1$ matrix with boolean entries determining the orientation of the local edges for every element
+	\end{itemize}
+	}\\
+	{\tt CDofs} & {\small consists of the fields
+	\begin{itemize}
+	 \item {\tt Dofs}: $N$ cells, which specify the labels of the degrees of freedom placed on each element
+	 \item {\tt nDofs}:  $N$-by-$1$ matrix containing the number of degrees of freedom for each element
+	\end{itemize}
+	} \\
+	{\tt tot\_EDofs} & {\small integer number specifying the total number of degrees of freedom placed on the edges} \\
+	{\tt tot\_CDofs} & {\small integer number specifying the total number of degrees of freedom placed on the elements}
+  \end{tabular}
+  \caption{Data structure for storing the degrees of freedom}
+  \label{tab:elem2dof}
+\end{table}
+
+ {\tt EParam} e.g. contains informatiom about the quadrature rule and shape functions which is needed for the computation of the computation of the element stiffness/mass matrices.
+
+% The function {\tt assemMat\_hp} is called by {\tt /Examples/hpFEM/main\_2} to {\tt main\_7} and applied to {\tt STIMA\_Lapl\_hp}. \\
+
+
+\subsection{DG finite elements} \label{ssec:ddg}
+
+As already mentioned on page \pageref{ssec:dg} the computation of the stiffness matrix is divided into five steps. Firstly the volume contributions are assembled using the \texttt{assemMat\_Vol\_DG} or the \texttt{assemMat\_Vol\_PDG} function. Along inner edges the local matrices coming from the additional boundary integrals are assembled using \texttt{assemMat\_Inn\_DG} or \texttt{assemMat\_Inn\_PDG}. The penalty term for occuring discontinuities can be assembled likewise. The last assembly routine is either \texttt{assemMat\_Bnd\_DG} or \texttt{assemMat\_Bnd\_PDG}. These are used for incorporating the contributions of the boundary integrals and the penalty terms along boundary edges.
+
+%%% mixed FE %%%
+
+\subsection{Mixed Finite Elements} \index{mixed finite elements!assembling of the global matrix}
+
+\subsubsection{Linear and Constant Finite Elements in 1D}
+
+ \ttitindex{assemMat\_P1P0\_1D} assembles constant and linear element contributions in 1D. The output is a band matrix with bandwidth 2.
+
+% It is used in the case of the 1D Wave equation with perfectly matched layer to assemble the element stiffness matrices {\tt STIMA\_Div\_P1P0\_1D}. See {\tt /Examples/PML/main\_PML\_1D}.
+
+\subsubsection{.. and in 2D}
+
+ In \ttitindex{assemMat\_P1P0} 3 element contributions are assembled.
+
+% It is used in the 2D wave equation with perfectly matched layer to assemble the element stiffness matrices {\tt STIMA\_Div\_x\_P1P0} resp. {\tt STIMA\_Div\_y\_P1P0}, see {\tt /Examples/PML/main\_PML\_2D}.
+
+\index{assembling!global matrix|)}

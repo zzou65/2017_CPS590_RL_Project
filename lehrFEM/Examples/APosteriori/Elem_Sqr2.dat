@@ -1,0 +1,20 @@
+% List of elements
+%
+%   User  :  WIESMEYR
+%   Date  :  20-OCT-2009
+%
+%   The first column contains the global index of each vertex.
+%
+
+1       1   5   12
+2       5   7   12
+3       12  7   4
+4       4   7   10
+5       8   10  7
+6       8   3   10
+7       3   8   9
+8       6   9   8
+9       2   9   6
+10      2   6   11
+11      6   5   11
+12      1   11  5
